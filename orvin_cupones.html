@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORVIN – Centro Global de Cupones y Ofertas</title>
+<meta name="description" content="Encuentra los mejores cupones y ofertas verificadas para tiendas LATAM. Descuentos exclusivos en tecnología, moda, hogar y más.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══ TOKENS ══ */
+:root{
+  --w:#FFF;--bg:#F7F8FA;--bg-a:#FFF4EC;
+  --am:#E8710A;--am-d:#C45D06;--am-l:#FDEBD0;
+  --nv:#1A1A2E;--nv-m:#2D2D44;
+  --gr:#6B7280;--gr-l:#E5E7EB;--gr-xl:#F3F4F6;
+  --gn:#16A34A;--gn-bg:#DCFCE7;
+  --rd:#DC2626;--rd-bg:#FEE2E2;
+  --bl:#2563EB;--bl-bg:#EFF6FF;
+  --pu:#7C3AED;--pu-bg:#F5F3FF;
+  --yl:#D97706;--yl-bg:#FEF3C7;
+  --r:12px;--r-lg:20px;--r-sm:6px;--r-xl:28px;
+  --sh:0 4px 16px rgba(0,0,0,.08);
+  --sh-lg:0 12px 40px rgba(0,0,0,.11);
+  --sh-xl:0 24px 64px rgba(0,0,0,.13);
+  --t:.22s cubic-bezier(.4,0,.2,1);
+  --nh:64px;
+}
+.dark{
+  --w:#1A1A2E;--bg:#0F0F1A;--bg-a:#2A1A08;
+  --nv:#E8E8F0;--nv-m:#C0C0D8;
+  --gr:#A0A0B8;--gr-l:rgba(255,255,255,.1);--gr-xl:#252540;
+  --sh:0 4px 16px rgba(0,0,0,.45);--sh-lg:0 12px 40px rgba(0,0,0,.55);
+}
+.dark body{background:#0F0F1A;color:#E8E8F0}
+.dark .nav,.dark .mobile-menu{background:rgba(15,15,26,.97);border-color:rgba(255,255,255,.08)}
+.dark .nav__logo{color:#E8E8F0}
+.dark .nav__search input{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#E8E8F0}
+.dark .coupon-card{background:#1A1A2E;border-color:rgba(255,255,255,.1)}
+.dark .coupon-card__code-box{background:#252540;color:#E8E8F0}
+.dark .coupon-card__conditions{color:#A0A0B8}
+.dark .filter-sidebar{background:#1A1A2E;border-color:rgba(255,255,255,.08)}
+.dark .filter-group{border-color:rgba(255,255,255,.06)}
+.dark .filter-chip{background:#252540;border-color:rgba(255,255,255,.1);color:#A0A0B8}
+.dark .filter-chip.active{background:var(--am);color:#fff;border-color:var(--am)}
+.dark .search-box input{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#E8E8F0}
+.dark .sort-select{background:#252540;border-color:rgba(255,255,255,.1);color:#E8E8F0}
+.dark .stats-bar{background:#252540}
+.dark .coupon-card__limited-bar-bg{background:rgba(255,255,255,.08)}
+.dark .tab-btn{color:#A0A0B8}
+.dark .tab-btn.active{color:var(--am);border-color:var(--am)}
+.dark .mobile-menu a{color:#E8E8F0;border-color:rgba(255,255,255,.07)}
+.dark .hero-section{background:linear-gradient(135deg,#0F0F1A 0%,#1A1A2E 100%)}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--nv);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* ══ NAV ══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:600;height:var(--nh);background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--gr-l);transition:background .3s,border-color .3s}
+.nav__inner{max-width:1340px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;gap:12px}
+.nav__logo{display:flex;align-items:center;gap:8px;font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--nv);letter-spacing:-.01em;flex-shrink:0;transition:color .3s}
+.nav__dot{width:7px;height:7px;border-radius:50%;background:var(--am);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.45);opacity:.7}}
+.nav__back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--gr);padding:7px 13px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);transition:all var(--t);flex-shrink:0}
+.nav__back:hover{border-color:var(--am);color:var(--am)}
+.nav__title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--nv);flex:1;transition:color .3s}
+.nav__right{display:flex;align-items:center;gap:10px;margin-left:auto}
+.nav__theme{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--gr-l);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all var(--t)}
+.nav__theme:hover{border-color:var(--am);background:var(--am);color:#fff}
+.nav__search{position:relative;display:flex;align-items:center}
+.nav__search input{padding:9px 14px 9px 38px;border:1.5px solid var(--gr-l);border-radius:30px;font-size:13px;font-family:'Inter',sans-serif;color:var(--nv);background:var(--bg);outline:none;width:260px;transition:all var(--t)}
+.nav__search input:focus{border-color:var(--am);background:var(--w);box-shadow:0 0 0 3px rgba(232,113,10,.1);width:320px}
+.nav__search input::placeholder{color:var(--gr)}
+.nav__search-icon{position:absolute;left:13px;color:var(--gr);font-size:14px;pointer-events:none}
+@media(max-width:768px){.nav__search input{width:160px}.nav__search input:focus{width:180px}.nav__title{display:none}}
+@media(max-width:480px){.nav__search{display:none}}
+
+/* ══ HERO ══ */
+.hero-section{
+  margin-top:var(--nh);
+  background:linear-gradient(135deg,#1A1A2E 0%,#2D2D44 50%,#1A2A3A 100%);
+  padding:64px 24px 52px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero-section::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;pointer-events:none}
+.hero-section__eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(232,113,10,.15);border:1px solid rgba(232,113,10,.3);border-radius:30px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--am);letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px}
+.hero-section__eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--am);animation:pulse 2s ease-in-out infinite}
+.hero-section__title{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,56px);font-weight:900;color:#fff;line-height:1.08;letter-spacing:-.02em;margin-bottom:14px}
+.hero-section__title em{font-style:italic;color:var(--am)}
+.hero-section__sub{font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 36px;line-height:1.7}
+/* Stats */
+.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
+.hero-stat{text-align:center;color:#fff}
+.hero-stat__num{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--am);line-height:1}
+.hero-stat__lbl{font-size:12px;color:rgba(255,255,255,.5);margin-top:3px;letter-spacing:.04em}
+
+/* ══ TABS ══ */
+.tabs-row{
+  max-width:1340px;margin:0 auto;
+  padding:0 24px;
+  display:flex;align-items:center;gap:0;
+  border-bottom:2px solid var(--gr-l);
+  background:var(--w);
+  position:sticky;top:var(--nh);z-index:400;
+  overflow-x:auto;scrollbar-width:none;
+  transition:background .3s,border-color .3s;
+}
+.tabs-row::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:16px 22px;font-size:14px;font-weight:500;
+  color:var(--gr);border-bottom:3px solid transparent;
+  white-space:nowrap;transition:all var(--t);
+  margin-bottom:-2px;flex-shrink:0;
+}
+.tab-btn:hover{color:var(--nv)}
+.tab-btn.active{color:var(--am);border-color:var(--am);font-weight:600}
+.tab-btn .tab-count{font-size:11px;background:var(--gr-xl);color:var(--gr);padding:2px 7px;border-radius:20px;margin-left:5px;vertical-align:middle}
+.tab-btn.active .tab-count{background:var(--am-l);color:var(--am-d)}
+
+/* ══ LAYOUT ══ */
+.main-layout{max-width:1340px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:start}
+@media(max-width:1024px){.main-layout{grid-template-columns:1fr}.filter-sidebar{display:none}.filter-sidebar.mobile-open{display:block;position:fixed;inset:0;z-index:700;overflow-y:auto}}
+@media(max-width:600px){.main-layout{padding:16px}}
+
+/* ══ SIDEBAR FILTERS ══ */
+.filter-sidebar{
+  background:var(--w);border:1.5px solid var(--gr-l);
+  border-radius:var(--r-lg);padding:0;
+  position:sticky;top:calc(var(--nh) + 56px);
+  max-height:calc(100vh - var(--nh) - 80px);
+  overflow-y:auto;scrollbar-width:thin;
+  transition:background .3s,border-color .3s;
+}
+.filter-sidebar::-webkit-scrollbar{width:4px}
+.filter-sidebar::-webkit-scrollbar-thumb{background:var(--gr-l);border-radius:4px}
+.filter-sidebar__header{
+  padding:18px 20px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--gr-l);
+  position:sticky;top:0;background:var(--w);z-index:1;
+  transition:background .3s;
+}
+.filter-sidebar__title{font-size:15px;font-weight:700;color:var(--nv);display:flex;align-items:center;gap:8px}
+.filter-sidebar__clear{font-size:12px;color:var(--am);font-weight:600;cursor:pointer;transition:opacity var(--t)}
+.filter-sidebar__clear:hover{opacity:.7}
+.filter-group{padding:18px 20px;border-bottom:1px solid var(--gr-l)}
+.filter-group:last-child{border-bottom:none}
+.filter-group__title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gr);margin-bottom:12px}
+.filter-chips{display:flex;flex-wrap:wrap;gap:7px}
+.filter-chip{
+  padding:6px 12px;border:1.5px solid var(--gr-l);border-radius:20px;
+  font-size:12px;font-weight:500;color:var(--gr);background:var(--w);
+  transition:all var(--t);cursor:pointer;white-space:nowrap;
+}
+.filter-chip:hover{border-color:var(--am);color:var(--am)}
+.filter-chip.active{background:var(--am);border-color:var(--am);color:#fff}
+/* Range slider */
+.price-range{padding:8px 0}
+.price-range input[type=range]{width:100%;accent-color:var(--am);cursor:pointer}
+.price-range__labels{display:flex;justify-content:space-between;font-size:12px;color:var(--gr);margin-top:6px}
+/* Coupon type */
+.ctype-item{display:flex;align-items:center;gap:10px;padding:7px 0;cursor:pointer}
+.ctype-item input[type=checkbox]{accent-color:var(--am);width:15px;height:15px;cursor:pointer}
+.ctype-item label{font-size:13px;color:var(--nv);cursor:pointer;flex:1;transition:color .3s}
+.ctype-item:hover label{color:var(--am)}
+
+/* ══ CONTENT AREA ══ */
+.content-area{}
+/* Search + sort bar */
+.search-sort-bar{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.search-box{position:relative;flex:1;min-width:220px}
+.search-box input{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--gr-l);border-radius:30px;font-size:14px;font-family:'Inter',sans-serif;color:var(--nv);background:var(--w);outline:none;transition:all var(--t)}
+.search-box input:focus{border-color:var(--am);box-shadow:0 0 0 3px rgba(232,113,10,.1)}
+.search-box input::placeholder{color:var(--gr)}
+.search-box-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--gr);font-size:15px;pointer-events:none}
+.sort-select{padding:10px 32px 10px 14px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);font-size:13px;color:var(--nv);background:var(--w);outline:none;appearance:none;cursor:pointer;font-family:'Inter',sans-serif;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color var(--t);white-space:nowrap;flex-shrink:0}
+.sort-select:focus{border-color:var(--am);outline:none}
+/* Stats bar */
+.stats-bar{background:var(--gr-xl);border-radius:var(--r-sm);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;font-size:13px;color:var(--gr);flex-wrap:wrap;gap:8px}
+.stats-bar strong{color:var(--nv)}
+.filter-toggle-btn{display:none;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);font-size:13px;font-weight:500;color:var(--nv);background:var(--w);transition:all var(--t)}
+.filter-toggle-btn:hover{border-color:var(--am);color:var(--am)}
+@media(max-width:1024px){.filter-toggle-btn{display:flex}}
+
+/* ══ COUPON GRID ══ */
+.coupon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+@media(max-width:800px){.coupon-grid{grid-template-columns:1fr}}
+
+/* ══ COUPON CARD ══ */
+.coupon-card{
+  background:var(--w);border:1.5px solid var(--gr-l);border-radius:var(--r-lg);
+  overflow:hidden;transition:transform var(--t),box-shadow var(--t),border-color var(--t);
+  position:relative;display:flex;flex-direction:column;
+}
+.coupon-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:rgba(232,113,10,.3)}
+/* Type indicator stripe */
+.coupon-card__stripe{height:4px;width:100%}
+.stripe--global{background:linear-gradient(90deg,var(--bl),#818CF8)}
+.stripe--limited{background:linear-gradient(90deg,var(--rd),#FB923C)}
+.stripe--personal{background:linear-gradient(90deg,var(--pu),#A855F7)}
+.stripe--category{background:linear-gradient(90deg,var(--gn),#34D399)}
+/* Card header */
+.coupon-card__header{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid var(--gr-l)}
+.coupon-card__logo{
+  width:52px;height:52px;border-radius:var(--r-sm);
+  background:var(--gr-xl);display:flex;align-items:center;justify-content:center;
+  font-size:26px;flex-shrink:0;border:1.5px solid var(--gr-l);
+}
+.coupon-card__meta{flex:1;min-width:0}
+.coupon-card__store{font-size:12px;font-weight:600;color:var(--gr);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.coupon-card__name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--nv);line-height:1.25;margin-bottom:6px;transition:color .3s}
+.coupon-card__tags{display:flex;gap:6px;flex-wrap:wrap}
+.ctag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap}
+.ctag--global{background:var(--bl-bg);color:var(--bl)}
+.ctag--limited{background:var(--rd-bg);color:var(--rd)}
+.ctag--personal{background:var(--pu-bg);color:var(--pu)}
+.ctag--category{background:var(--gn-bg);color:var(--gn)}
+.ctag--new{background:var(--yl-bg);color:var(--yl)}
+.ctag--hot{background:var(--rd-bg);color:var(--rd)}
+/* Benefit */
+.coupon-card__benefit{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--gr-l)}
+.coupon-card__pct{
+  font-family:'Playfair Display',serif;
+  font-size:38px;font-weight:900;
+  color:var(--am);line-height:1;flex-shrink:0;
+  min-width:80px;text-align:center;
+}
+.coupon-card__pct span{font-size:16px;vertical-align:super}
+.coupon-card__benefit-info{}
+.coupon-card__benefit-title{font-size:14px;font-weight:600;color:var(--nv);margin-bottom:3px;transition:color .3s}
+.coupon-card__benefit-sub{font-size:12px;color:var(--gr);line-height:1.5}
+/* Code section */
+.coupon-card__code-section{padding:14px 20px;border-bottom:1px solid var(--gr-l);display:flex;align-items:center;gap:10px}
+.coupon-card__code-box{
+  flex:1;background:var(--gr-xl);border:2px dashed var(--gr-l);
+  border-radius:var(--r-sm);padding:9px 14px;
+  font-family:monospace;font-size:16px;font-weight:700;
+  color:var(--nv);letter-spacing:.06em;user-select:all;
+  transition:background .3s,color .3s;text-align:center;
+}
+.coupon-card__copy-btn{
+  padding:9px 16px;background:var(--am-d);color:#fff;
+  font-size:13px;font-weight:700;border-radius:var(--r-sm);
+  transition:background var(--t),transform var(--t);white-space:nowrap;flex-shrink:0;
+}
+.coupon-card__copy-btn:hover{background:var(--am);transform:scale(1.03)}
+.coupon-card__copy-btn.copied{background:var(--gn)}
+/* Footer */
+.coupon-card__footer{padding:14px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.coupon-card__conditions{font-size:12px;color:var(--gr);line-height:1.55}
+.coupon-card__conditions strong{color:var(--nv);transition:color .3s}
+/* Limited progress */
+.coupon-card__limited{margin-top:4px}
+.coupon-card__limited-label{display:flex;justify-content:space-between;font-size:11px;color:var(--gr);margin-bottom:5px}
+.coupon-card__limited-label span:last-child{font-weight:700;color:var(--rd)}
+.coupon-card__limited-bar-bg{height:6px;background:var(--gr-l);border-radius:4px;overflow:hidden}
+.coupon-card__limited-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--am-l),var(--am));transition:width 1s cubic-bezier(.4,0,.2,1)}
+/* CTA */
+.coupon-card__cta{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px 18px;margin-top:auto;
+}
+.coupon-card__expiry{font-size:11px;color:var(--gr);display:flex;align-items:center;gap:4px}
+.coupon-card__expiry.urgent{color:var(--rd);font-weight:600}
+.coupon-card__get-btn{
+  padding:11px 22px;background:var(--nv);color:#fff;
+  font-size:13px;font-weight:700;border-radius:var(--r-sm);
+  transition:background var(--t),transform var(--t);
+}
+.coupon-card:hover .coupon-card__get-btn{background:var(--am)}
+.coupon-card__get-btn:hover{transform:translateY(-1px)}
+
+/* ══ EMPTY STATE ══ */
+.empty-state{text-align:center;padding:80px 24px;color:var(--gr)}
+.empty-state__icon{font-size:48px;margin-bottom:16px}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--nv);margin-bottom:8px;transition:color .3s}
+
+/* ══ LOAD MORE ══ */
+.load-more-wrap{text-align:center;margin-top:40px;padding-bottom:40px}
+.load-more-btn{
+  padding:14px 40px;background:var(--w);border:2px solid var(--am);
+  color:var(--am);font-size:14px;font-weight:700;border-radius:var(--r-sm);
+  transition:all var(--t);
+}
+.load-more-btn:hover{background:var(--am);color:#fff}
+
+/* ══ REVEAL ══ */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+/* ══ MOBILE FILTER OVERLAY ══ */
+.filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:699;backdrop-filter:blur(4px)}
+.filter-overlay.open{display:block}
+.filter-sidebar.mobile-open{display:block;position:fixed;left:0;top:0;bottom:0;z-index:700;width:min(340px,90vw);border-radius:0;border:none;max-height:100vh}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" aria-label="Navegación">
+  <div class="nav__inner">
+    <a href="orvin-v7.html" class="nav__back">&#8592; Volver</a>
+    <a href="orvin-v7.html" class="nav__logo"><div class="nav__dot" aria-hidden="true"></div>ORVIN</a>
+    <span class="nav__title">Centro de Cupones</span>
+    <div class="nav__right">
+      <div class="nav__search" role="search" aria-label="Buscar cupones">
+        <span class="nav__search-icon" aria-hidden="true">🔍</span>
+        <label for="nav-q" class="sr-only">Buscar cupones</label>
+        <input type="search" id="nav-q" placeholder="Buscar marca o descuento...">
+      </div>
+      <button class="nav__theme" id="theme-btn" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-section" aria-label="Centro global de cupones">
+  <div class="hero-section__eyebrow">🎫 Centro Global de Promociones</div>
+  <h1 class="hero-section__title">Cupones y ofertas<br><em>verificadas para ti</em></h1>
+  <p class="hero-section__sub">Descuentos exclusivos de las mejores marcas LATAM. Nuevos cupones cada día, curados y verificados por ORVIN.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat__num" id="stat-total">0</div><div class="hero-stat__lbl">Cupones activos</div></div>
+    <div class="hero-stat"><div class="hero-stat__num">54</div><div class="hero-stat__lbl">Países LATAM</div></div>
+    <div class="hero-stat"><div class="hero-stat__num">200+</div><div class="hero-stat__lbl">Marcas y tiendas</div></div>
+    <div class="hero-stat"><div class="hero-stat__num">100%</div><div class="hero-stat__lbl">Verificados</div></div>
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="tabs-row" role="tablist" aria-label="Tipos de cupones">
+  <button class="tab-btn active" data-tab="all" role="tab" aria-selected="true">
+    Todos <span class="tab-count" id="tab-all-count">0</span>
+  </button>
+  <button class="tab-btn" data-tab="global" role="tab" aria-selected="false">
+    🌐 Globales <span class="tab-count" id="tab-global-count">0</span>
+  </button>
+  <button class="tab-btn" data-tab="limited" role="tab" aria-selected="false">
+    ⏳ Limitados <span class="tab-count" id="tab-limited-count">0</span>
+  </button>
+  <button class="tab-btn" data-tab="personal" role="tab" aria-selected="false">
+    👤 Personales <span class="tab-count" id="tab-personal-count">0</span>
+  </button>
+  <button class="tab-btn" data-tab="category" role="tab" aria-selected="false">
+    🏷️ Por Categoría <span class="tab-count" id="tab-category-count">0</span>
+  </button>
+  <button class="tab-btn" data-tab="expiring" role="tab" aria-selected="false">
+    🔥 Por Vencer
+  </button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="filter-sidebar" id="filter-sidebar" aria-label="Filtros de cupones">
+    <div class="filter-sidebar__header">
+      <span class="filter-sidebar__title">🔧 Filtros</span>
+      <span class="filter-sidebar__clear" id="clear-all">Limpiar todo</span>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group__title">Categoría</div>
+      <div class="filter-chips" id="fc-cats">
+        <button class="filter-chip active" data-cat="all">Todas</button>
+        <button class="filter-chip" data-cat="tecnologia">💻 Tecnología</button>
+        <button class="filter-chip" data-cat="ropa">👗 Moda</button>
+        <button class="filter-chip" data-cat="hogar">🏠 Hogar</button>
+        <button class="filter-chip" data-cat="deportes">⚽ Deportes</button>
+        <button class="filter-chip" data-cat="entrete">🎮 Entretenimiento</button>
+        <button class="filter-chip" data-cat="instrumentos">🎸 Instrumentos</button>
+        <button class="filter-chip" data-cat="juguetes">🧸 Juguetes</button>
+        <button class="filter-chip" data-cat="mascotas">🐾 Mascotas</button>
+        <button class="filter-chip" data-cat="comida">🍔 Comida</button>
+        <button class="filter-chip" data-cat="viajes">✈️ Viajes</button>
+        <button class="filter-chip" data-cat="servicios">💡 Servicios</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group__title">Tipo de descuento</div>
+      <div class="filter-chips" id="fc-discount">
+        <button class="filter-chip active" data-disc="all">Todos</button>
+        <button class="filter-chip" data-disc="percent">% Porcentaje</button>
+        <button class="filter-chip" data-disc="fixed">$ Monto fijo</button>
+        <button class="filter-chip" data-disc="shipping">🚚 Envío gratis</button>
+        <button class="filter-chip" data-disc="2x1">2×1 Promoción</button>
+        <button class="filter-chip" data-disc="cashback">💰 Cashback</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group__title">Marca / Tienda</div>
+      <div class="filter-chips" id="fc-brands">
+        <button class="filter-chip active" data-brand="all">Todas</button>
+        <button class="filter-chip" data-brand="Falabella">Falabella</button>
+        <button class="filter-chip" data-brand="Ripley">Ripley</button>
+        <button class="filter-chip" data-brand="Paris">Paris</button>
+        <button class="filter-chip" data-brand="MercadoLibre">MercadoLibre</button>
+        <button class="filter-chip" data-brand="Nike">Nike</button>
+        <button class="filter-chip" data-brand="Adidas">Adidas</button>
+        <button class="filter-chip" data-brand="Apple">Apple</button>
+        <button class="filter-chip" data-brand="Samsung">Samsung</button>
+        <button class="filter-chip" data-brand="Petco">Petco</button>
+        <button class="filter-chip" data-brand="Decathlon">Decathlon</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group__title">Tipo de cupón</div>
+      <div class="ctype-item"><input type="checkbox" id="ct-global" data-type="global"><label for="ct-global">🌐 Global (sin límite de uso)</label></div>
+      <div class="ctype-item"><input type="checkbox" id="ct-limited" data-type="limited"><label for="ct-limited">⏳ Limitado (cupos disponibles)</label></div>
+      <div class="ctype-item"><input type="checkbox" id="ct-personal" data-type="personal"><label for="ct-personal">👤 Personal (solo para ti)</label></div>
+      <div class="ctype-item"><input type="checkbox" id="ct-category" data-type="category"><label for="ct-category">🏷️ Por categoría</label></div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group__title">Descuento mínimo</div>
+      <div class="price-range">
+        <input type="range" min="0" max="70" value="0" step="5" id="min-disc-range">
+        <div class="price-range__labels">
+          <span>0%</span>
+          <span id="min-disc-val">Mínimo: 0%</span>
+          <span>70%</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+    <div class="search-sort-bar">
+      <div class="search-box">
+        <span class="search-box-icon" aria-hidden="true">🔍</span>
+        <label for="main-q" class="sr-only">Buscar cupones</label>
+        <input type="search" id="main-q" placeholder="Buscar marca, categoría o descripción...">
+      </div>
+      <select class="sort-select" id="sort-sel" aria-label="Ordenar cupones">
+        <option value="new">Más nuevos</option>
+        <option value="popular">Más populares</option>
+        <option value="expiring">Por vencer</option>
+        <option value="discount">Mayor descuento</option>
+        <option value="alpha">A–Z</option>
+      </select>
+      <button class="filter-toggle-btn" id="filter-toggle-btn" aria-label="Mostrar filtros">
+        ⚙️ Filtros
+      </button>
+    </div>
+
+    <div class="stats-bar" id="stats-bar">
+      <span>Mostrando <strong id="showing-count">0</strong> cupones</span>
+      <span id="active-filters-summary" style="font-size:12px;color:var(--gr)"></span>
+    </div>
+
+    <div class="coupon-grid" id="coupon-grid"></div>
+
+    <div id="empty-state" class="empty-state" style="display:none">
+      <div class="empty-state__icon">🔍</div>
+      <h3>Sin resultados</h3>
+      <p>No encontramos cupones con esos filtros. Prueba con otra búsqueda.</p>
+    </div>
+
+    <div class="load-more-wrap" id="load-more-wrap">
+      <button class="load-more-btn" id="load-more-btn">Cargar más cupones</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- FILTER OVERLAY (mobile) -->
+<div class="filter-overlay" id="filter-overlay"></div>
+
+<script>
+/* ══ DATA — 40+ coupons, 4 types, 9+ categories ══ */
+const COUPONS = [
+  /* GLOBALES */
+  {id:1, store:'Falabella', logo:'🏪', name:'Super Descuento Tecnología', benefit:'15% en toda la línea tech', benefitType:'percent', pct:15, conditions:'Mín. $50.000. No acumulable con otras ofertas. Válido online y tienda.', code:'FALA15', type:'global', cat:'tecnologia', tags:['new','hot'], expiry:'2025-12-31', uses:null, maxUses:null, isNew:true, isHot:true},
+  {id:2, store:'Nike',      logo:'👟', name:'Envío Gratis sin Mínimo',   benefit:'Envío gratis a todo Chile', benefitType:'shipping', pct:0, conditions:'Sin monto mínimo. Solo para productos en stock. Aplica una vez por cuenta.', code:'NIKEFREE', type:'global', cat:'ropa', tags:['hot'], expiry:'2025-11-15', uses:null, maxUses:null, isHot:true},
+  {id:3, store:'MercadoLibre',logo:'🟡',name:'Primera Compra -$5.000',  benefit:'$5.000 de descuento', benefitType:'fixed', pct:0, fixedAmt:5000, conditions:'Solo para usuarios nuevos. Primera compra sobre $20.000. Una sola vez.', code:'MLPRIMERA', type:'global', cat:'tecnologia', tags:['new'], expiry:'2025-10-01', uses:null, maxUses:null, isNew:true},
+  {id:4, store:'Adidas',    logo:'🏃', name:'20% en Calzado Seleccionado',benefit:'20% OFF calzado', benefitType:'percent', pct:20, conditions:'Solo tallas disponibles. No incluye colecciones especiales ni colaboraciones.', code:'ADIDAS20', type:'global', cat:'ropa', tags:[], expiry:'2025-09-30', uses:null, maxUses:null},
+  {id:5, store:'Ripley',    logo:'🛍️', name:'10% Off Electrohogar',      benefit:'10% en electrohogar', benefitType:'percent', pct:10, conditions:'Aplica en refrigeradores, lavadoras y cocinas. Mín. $100.000.', code:'RIPLEY10', type:'global', cat:'hogar', tags:[], expiry:'2025-11-30', uses:null, maxUses:null},
+  {id:6, store:'Paris',     logo:'🏬', name:'Envío Gratis Permanente',   benefit:'Envío gratis',benefitType:'shipping', pct:0, conditions:'Sin monto mínimo. Despacho estándar 3-5 días hábiles. No incluye regiones.', code:'PARISFREE', type:'global', cat:'hogar', tags:['hot'], expiry:'2025-10-15', uses:null, maxUses:null, isHot:true},
+  {id:7, store:'Petco',     logo:'🐾', name:'15% en Alimentos Premium',  benefit:'15% en alimentos', benefitType:'percent', pct:15, conditions:'Válido en marcas Royal Canin, Hills y Purina. No acumulable.', code:'PETCO15', type:'global', cat:'mascotas', tags:['new'], expiry:'2025-12-15', uses:null, maxUses:null, isNew:true},
+  {id:8, store:'Fender',    logo:'🎸', name:'10% en Instrumentos',       benefit:'10% en toda la tienda', benefitType:'percent', pct:10, conditions:'Válido en guitarra, bajo y accesorios. Excluye productos en oferta.', code:'FENDER10', type:'global', cat:'instrumentos', tags:[], expiry:'2025-11-01', uses:null, maxUses:null},
+  {id:9, store:'Decathlon', logo:'⚽', name:'15% Running y Trail',       benefit:'15% en running', benefitType:'percent', pct:15, conditions:'Categorías: zapatillas running, ropa técnica y accesorios de trail. Mín. $30.000.', code:'DECA15', type:'global', cat:'deportes', tags:['hot'], expiry:'2025-11-05', uses:null, maxUses:null, isHot:true},
+  {id:10, store:'Steam',    logo:'🎮', name:'Hasta 90% en Videojuegos',  benefit:'Hasta 90% OFF', benefitType:'percent', pct:90, conditions:'Solo en juegos participantes. Precios varían por título. Válido durante Sale.', code:'STEAM90', type:'global', cat:'entrete', tags:['hot','new'], expiry:'2025-09-28', uses:null, maxUses:null, isHot:true, isNew:true},
+  {id:11, store:'LATAM',    logo:'✈️', name:'15% en Vuelos LATAM',       benefit:'15% OFF vuelos', benefitType:'percent', pct:15, conditions:'Rutas seleccionadas Chile-Perú-Colombia. Reserva con 15 días de anticipación.', code:'LATAM15', type:'global', cat:'viajes', tags:['new'], expiry:'2025-10-31', uses:null, maxUses:null, isNew:true},
+  {id:12, store:'Netflix',  logo:'📺', name:'2 Meses Gratis',            benefit:'2 meses sin costo', benefitType:'fixed', pct:0, fixedAmt:0, conditions:'Solo para cuentas nuevas. Plan Estándar. Se factura automáticamente al mes 3.', code:'NETFLIX2M', type:'global', cat:'servicios', tags:['hot','new'], expiry:'2025-12-31', uses:null, maxUses:null, isHot:true, isNew:true},
+  {id:13, store:'Rappi',    logo:'🛵', name:'$3.000 Off Primer Pedido',  benefit:'$3.000 de descuento', benefitType:'fixed', pct:0, fixedAmt:3000, conditions:'Solo app Rappi. Primer pedido. Mín. $10.000. Válido en restaurantes participantes.', code:'RAPPI3K', type:'global', cat:'comida', tags:['new'], expiry:'2025-10-20', uses:null, maxUses:null, isNew:true},
+  /* LIMITADOS */
+  {id:14, store:'Apple',    logo:'🍎', name:'5% en Mac con Visa Banco',  benefit:'5% cashback', benefitType:'cashback', pct:5, conditions:'Solo con tarjetas Visa Banco de Chile. Máx. $50.000 de reembolso. Cupos diarios.', code:'APPLE5V', type:'limited', cat:'tecnologia', tags:['hot'], expiry:'2025-12-25', uses:3200, maxUses:5000, isHot:true},
+  {id:15, store:'Samsung',  logo:'📱', name:'Primeros 5.000 con -15%',   benefit:'15% OFF primeros 5K', benefitType:'percent', pct:15, conditions:'Solo primeros 5.000 usuarios. Registro previo requerido en samsung.com.', code:'SAMS15K', type:'limited', cat:'tecnologia', tags:['hot','new'], expiry:'2025-10-10', uses:4100, maxUses:5000, isHot:true, isNew:true},
+  {id:16, store:'Sony',     logo:'🎵', name:'Audífonos con -20%',        benefit:'20% en audífonos', benefitType:'percent', pct:20, conditions:'Modelos WH y XM series. Stock limitado. No aplica sobre precios ya rebajados.', code:'SONY20', type:'limited', cat:'tecnologia', tags:[], expiry:'2025-10-31', uses:890, maxUses:2000},
+  {id:17, store:'Trek',     logo:'🚵', name:'$30.000 Off MTB Marlin',    benefit:'$30.000 descuento', benefitType:'fixed', pct:0, fixedAmt:30000, conditions:'Solo bicicletas Trek Marlin 5, 6 y 7. Hasta agotar stock. No acumulable.', code:'TREK30', type:'limited', cat:'deportes', tags:['new'], expiry:'2025-11-10', uses:120, maxUses:300, isNew:true},
+  {id:18, store:'DJI',      logo:'🚁', name:'$50.000 Off Drones',        benefit:'$50.000 de descuento', benefitType:'fixed', pct:0, fixedAmt:50000, conditions:'Solo drones DJI Mini 3 y Air 3. Limitado a 500 unidades. Compra online.', code:'DJI50', type:'limited', cat:'juguetes', tags:['hot'], expiry:'2025-10-05', uses:380, maxUses:500, isHot:true},
+  {id:19, store:'IKEA',     logo:'🛋️', name:'10% Primera Compra Online', benefit:'10% primera compra', benefitType:'percent', pct:10, conditions:'Solo primera compra en IKEA.cl. No aplica en productos IKEA Family. Mín. $80.000.', code:'IKEA10', type:'limited', cat:'hogar', tags:['new'], expiry:'2025-11-28', uses:2100, maxUses:10000, isNew:true},
+  {id:20, store:'Riot Games',logo:'🎯',name:'2000 RP Gratis',            benefit:'2000 RP de regalo', benefitType:'fixed', pct:0, fixedAmt:0, conditions:'Solo cuentas League of Legends nuevas. Una por cuenta. No transferible.', code:'RIOT2K', type:'limited', cat:'entrete', tags:['hot','new'], expiry:'2025-09-30', uses:14500, maxUses:20000, isHot:true, isNew:true},
+  {id:21, store:'UberEats',  logo:'🍕', name:'50% Off 3 Pedidos',        benefit:'50% en 3 pedidos', benefitType:'percent', pct:50, conditions:'Descuento en próximos 3 pedidos. Máx. $3.000 por pedido. Solo app. Expira en 7 días.', code:'UBER50X3', type:'limited', cat:'comida', tags:['hot'], expiry:'2025-10-15', uses:8900, maxUses:15000, isHot:true},
+  /* PERSONALES */
+  {id:22, store:'Falabella', logo:'🏪', name:'Cupón Fidelidad Dorado',   benefit:'12% exclusivo CMR Gold', benefitType:'percent', pct:12, conditions:'Solo clientes CMR Gold activos. Válido 1 sola vez por tarjeta. No acumulable.', code:'PERSONAL-••••-7821', type:'personal', cat:'tecnologia', tags:['personal'], expiry:'2025-11-30', uses:null, maxUses:1},
+  {id:23, store:'Ripley',    logo:'🛍️', name:'Premio Lealtad Silver',    benefit:'$15.000 crédito', benefitType:'fixed', pct:0, fixedAmt:15000, conditions:'Asignado a tu RUT. Válido una sola vez. Compra mín. $50.000. Solo tienda física.', code:'PERSONAL-••••-3344', type:'personal', cat:'hogar', tags:['personal'], expiry:'2025-10-20', uses:null, maxUses:1},
+  {id:24, store:'Linio',     logo:'🌐', name:'Bienvenida Nuevo Usuario', benefit:'10% bienvenida', benefitType:'percent', pct:10, conditions:'Solo para tu cuenta. Primer pedido. Válido 7 días desde que te registraste.', code:'PERSONAL-••••-9901', type:'personal', cat:'tecnologia', tags:['personal','new'], expiry:'2025-10-25', uses:null, maxUses:1, isNew:true},
+  {id:25, store:'Nespresso', logo:'☕', name:'Cápsulas Gratis por Fidelidad',benefit:'3x2 exclusivo fidelidad', benefitType:'2x1', pct:0, conditions:'Solo para miembros Nespresso Club activos. Aplica en cápsulas Vertuo 30u. Una vez.', code:'PERSONAL-••••-5512', type:'personal', cat:'hogar', tags:['personal'], expiry:'2025-12-01', uses:null, maxUses:1},
+  /* POR CATEGORÍA */
+  {id:26, store:'Tiendas LATAM',logo:'🎸',name:'20% Todo en Instrumentos',benefit:'20% en instrumentos', benefitType:'percent', pct:20, conditions:'Aplica a guitarra, piano, batería y accesorios musicales en tiendas participantes.', code:'INSTRU20', type:'category', cat:'instrumentos', tags:['new'], expiry:'2025-12-10', uses:null, maxUses:null, isNew:true},
+  {id:27, store:'Marcas Mascotas',logo:'🐾',name:'$5.000 Off Accesorios Mascotas',benefit:'$5.000 en accesorios', benefitType:'fixed', pct:0, fixedAmt:5000, conditions:'En productos de higiene y accesorios para mascotas. Excluye alimentos. Mín. $20.000.', code:'PETS5K', type:'category', cat:'mascotas', tags:[], expiry:'2025-11-20', uses:null, maxUses:null},
+  {id:28, store:'Juguetes Chile',logo:'🧸',name:'25% en Juguetes LEGO',  benefit:'25% en LEGO', benefitType:'percent', pct:25, conditions:'Solo en sets LEGO Technic y Creator. Excluye ediciones limitadas y sets Star Wars.', code:'LEGO25', type:'category', cat:'juguetes', tags:['hot','new'], expiry:'2025-12-20', uses:null, maxUses:null, isHot:true, isNew:true},
+  {id:29, store:'Marcas Deporte',logo:'⚽',name:'Kit Deporte: 2 prendas -30%',benefit:'2 prendas = 30% OFF', benefitType:'percent', pct:30, conditions:'Al llevar 2 prendas deportivas de marcas Puma, Nike o Adidas. No incluye calzado.', code:'DEPORTE2X30', type:'category', cat:'deportes', tags:[], expiry:'2025-10-31', uses:null, maxUses:null},
+  {id:30, store:'Plataformas Gaming',logo:'🎮',name:'Pack Gaming: 40% Suscripciones',benefit:'40% en suscripciones', benefitType:'percent', pct:40, conditions:'Xbox Game Pass, PS Plus y Nintendo Online. Al contratar plan anual en tiendas participantes.', code:'GAMING40', type:'category', cat:'entrete', tags:['hot'], expiry:'2025-10-15', uses:null, maxUses:null, isHot:true},
+  {id:31, store:'Marcas Moda',logo:'👗',name:'Temporada: 35% Ropa Formal', benefit:'35% moda formal', benefitType:'percent', pct:35, conditions:'Colecciones otoño-invierno. Incluye Hugo Boss, Tommy Hilfiger y Lacoste en tiendas select.', code:'FORMAL35', type:'category', cat:'ropa', tags:['new'], expiry:'2025-11-15', uses:null, maxUses:null, isNew:true},
+  {id:32, store:'Servicios LATAM',logo:'💡',name:'Internet Fibra: 3 Meses -50%', benefit:'50% en fibra óptica', benefitType:'percent', pct:50, conditions:'Solo planes nuevos de fibra óptica 400Mb o superior. Precio especial primeros 3 meses.', code:'FIBRA50', type:'category', cat:'servicios', tags:['hot','new'], expiry:'2025-12-31', uses:null, maxUses:null, isHot:true, isNew:true},
+  {id:33, store:'Restaurantes',logo:'🍔',name:'Happy Hour: 2x1 Pizzas',   benefit:'2×1 en pizzas', benefitType:'2x1', pct:0, conditions:'Lunes a jueves de 14:00 a 18:00. Solo delivery. Restaurantes participantes en Santiago.', code:'PIZZA2X1', type:'category', cat:'comida', tags:['hot'], expiry:'2025-10-25', uses:null, maxUses:null, isHot:true},
+  {id:34, store:'Agencias Viaje',logo:'✈️',name:'Vuelos + Hotel -20%',   benefit:'Pack viaje -20%', benefitType:'percent', pct:20, conditions:'Al reservar vuelo + hotel en el mismo pago. Destinos Caribe, Miami y Europa participan.', code:'PACK20', type:'category', cat:'viajes', tags:['new'], expiry:'2025-11-30', uses:null, maxUses:null, isNew:true},
+  {id:35, store:'Bose',      logo:'🎵', name:'Cashback 8% Audífonos',    benefit:'8% cashback', benefitType:'cashback', pct:8, conditions:'Cashback en cuenta Bose. Aplica en QC45, QC35 II y Soundbars. Plazo 30 días.', code:'BOSECASH8', type:'global', cat:'tecnologia', tags:[], expiry:'2025-12-05', uses:null, maxUses:null},
+  {id:36, store:'New Balance',logo:'👟', name:'NB Running -25%',          benefit:'25% en running NB', benefitType:'percent', pct:25, conditions:'Colección Fresh Foam y FuelCell. Tallas limitadas. Válido hasta agotar stock.', code:'NB25', type:'global', cat:'ropa', tags:['new'], expiry:'2025-10-10', uses:null, maxUses:null, isNew:true},
+  {id:37, store:'PlayStation',logo:'🎮',name:'PS Plus Extra 3M -35%',     benefit:'35% PS Plus Extra', benefitType:'percent', pct:35, conditions:'Plan trimestral PS Plus Extra. Válido para cuentas PSN nuevas en el plan. Chile solamente.', code:'PS35', type:'limited', cat:'entrete', tags:['hot','new'], expiry:'2025-09-29', uses:1800, maxUses:3000, isHot:true, isNew:true},
+  {id:38, store:'LG Store',  logo:'📺', name:'$20.000 Off Lavadoras',     benefit:'$20.000 descuento', benefitType:'fixed', pct:0, fixedAmt:20000, conditions:'Modelos WT y WM. Compra mín. $250.000. Incluye despacho e instalación gratis.', code:'LG20K', type:'global', cat:'hogar', tags:[], expiry:'2025-12-01', uses:null, maxUses:null},
+  {id:39, store:'Rosen',     logo:'🛏️', name:'20% Colchones Memory Foam',benefit:'20% en colchones', benefitType:'percent', pct:20, conditions:'Solo en colchones Memory Foam y resortes King/Queen. No incluye bases ni accesorios.', code:'ROSEN20', type:'global', cat:'hogar', tags:['new'], expiry:'2025-10-20', uses:null, maxUses:null, isNew:true},
+  {id:40, store:'Duolingo',  logo:'🦉', name:'3 Meses Premium Gratis',   benefit:'3 meses sin costo', benefitType:'fixed', pct:0, fixedAmt:0, conditions:'Solo para usuarios Duolingo sin plan premium. Se factura al mes 4. Cancela antes sin costo.', code:'DUO3M', type:'global', cat:'servicios', tags:['new','hot'], expiry:'2025-12-31', uses:null, maxUses:null, isNew:true, isHot:true},
+  {id:41, store:'Spotify',   logo:'🎵', name:'3 Meses Premium $0',       benefit:'3 meses gratis', benefitType:'fixed', pct:0, fixedAmt:0, conditions:'Solo usuarios nuevos Spotify. No requiere tarjeta de crédito. Cancela cuando quieras.', code:'SPOTIFY3M', type:'limited', cat:'servicios', tags:['hot'], expiry:'2025-11-30', uses:12000, maxUses:20000, isHot:true},
+  {id:42, store:'Canva',     logo:'🎨', name:'Canva Pro 30 Días Gratis',  benefit:'Pro gratis 30 días', benefitType:'fixed', pct:0, fixedAmt:0, conditions:'Para equipos y freelancers. Solo nuevas cuentas Pro. Se factura al día 31.', code:'CANVAPRO', type:'global', cat:'servicios', tags:['new'], expiry:'2025-12-31', uses:null, maxUses:null, isNew:true},
+];
+
+/* ══ STATE ══ */
+let fCat='all', fDisc='all', fBrand='all', fTypes=[], fMinDisc=0, fQuery='', fSort='new', fTab='all';
+const PAGE_SIZE=12;
+let shownCount=PAGE_SIZE;
+
+/* ══ THEME ══ */
+let isDark=false;
+document.getElementById('theme-btn').addEventListener('click',()=>{
+  isDark=!isDark;
+  document.documentElement.classList.toggle('dark',isDark);
+  document.getElementById('theme-btn').textContent=isDark?'☀️':'🌙';
+});
+
+/* ══ TAB COUNTS ══ */
+function updateTabCounts(){
+  document.getElementById('tab-all-count').textContent=COUPONS.length;
+  ['global','limited','personal','category'].forEach(t=>{
+    const el=document.getElementById('tab-'+t+'-count');
+    if(el)el.textContent=COUPONS.filter(c=>c.type===t).length;
+  });
+  document.getElementById('stat-total').textContent=COUPONS.length;
+}
+
+/* ══ FILTER ══ */
+function getDiscount(c){
+  if(c.benefitType==='percent')return c.pct;
+  if(c.benefitType==='fixed')return c.fixedAmt>0?Math.round(c.fixedAmt/1000*5):5;
+  if(c.benefitType==='shipping')return 5;
+  if(c.benefitType==='cashback')return c.pct;
+  if(c.benefitType==='2x1')return 50;
+  return 0;
+}
+
+function applyFilters(){
+  const q=fQuery.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return COUPONS.filter(c=>{
+    if(fTab==='expiring'){
+      const d=new Date(c.expiry);const now=new Date();const diff=(d-now)/(1000*60*60*24);
+      if(diff>7)return false;
+    } else if(fTab!=='all'&&fTab!=='expiring'){
+      if(c.type!==fTab)return false;
+    }
+    if(fCat!=='all'&&c.cat!==fCat)return false;
+    if(fDisc!=='all'&&c.benefitType!==fDisc)return false;
+    if(fBrand!=='all'&&c.store!==fBrand)return false;
+    if(fTypes.length>0&&!fTypes.includes(c.type))return false;
+    if(getDiscount(c)<fMinDisc)return false;
+    if(q){
+      const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+      if(!norm(c.store).includes(q)&&!norm(c.name).includes(q)&&!norm(c.benefit).includes(q)&&!norm(c.cat).includes(q))return false;
+    }
+    return true;
+  }).sort((a,b)=>{
+    if(fSort==='popular'){const au=a.uses||0,bu=b.uses||0;return bu-au;}
+    if(fSort==='expiring'){return new Date(a.expiry)-new Date(b.expiry);}
+    if(fSort==='discount'){return getDiscount(b)-getDiscount(a);}
+    if(fSort==='alpha'){return a.store.localeCompare(b.store);}
+    return (b.isNew?1:0)-(a.isNew?1:0);
+  });
+}
+
+/* ══ RENDER COUPON CARD ══ */
+function renderCard(c){
+  const pct=getDiscount(c);
+  const stripeClass={global:'stripe--global',limited:'stripe--limited',personal:'stripe--personal',category:'stripe--category'}[c.type]||'stripe--global';
+  const typeTag={global:'🌐 Global',limited:'⏳ Limitado',personal:'👤 Personal',category:'🏷️ Categoría'}[c.type]||'';
+  const typeTagClass={global:'ctag--global',limited:'ctag--limited',personal:'ctag--personal',category:'ctag--category'}[c.type]||'ctag--global';
+  const isPersonal=c.type==='personal';
+  const d=new Date(c.expiry);const now=new Date();const diffDays=Math.round((d-now)/(1000*60*60*24));
+  const isUrgent=diffDays<=7;
+  const codeDisplay=isPersonal?c.code:`${c.code}`;
+  let benefitDisplay='';
+  if(c.benefitType==='percent')benefitDisplay=`<div class="coupon-card__pct"><span>−</span>${pct}<span>%</span></div>`;
+  else if(c.benefitType==='fixed'&&c.fixedAmt>0)benefitDisplay=`<div class="coupon-card__pct" style="font-size:24px">$${c.fixedAmt.toLocaleString('es-CL')}</div>`;
+  else if(c.benefitType==='shipping')benefitDisplay=`<div class="coupon-card__pct" style="font-size:28px">🚚</div>`;
+  else if(c.benefitType==='cashback')benefitDisplay=`<div class="coupon-card__pct"><span style="font-size:14px">CB</span>${pct}<span>%</span></div>`;
+  else if(c.benefitType==='2x1')benefitDisplay=`<div class="coupon-card__pct" style="font-size:28px">2×1</div>`;
+  else benefitDisplay=`<div class="coupon-card__pct" style="font-size:22px">GRATIS</div>`;
+
+  let limitedHtml='';
+  if(c.type==='limited'&&c.uses!=null&&c.maxUses!=null){
+    const pctUsed=Math.round(c.uses/c.maxUses*100);
+    const remaining=c.maxUses-c.uses;
+    limitedHtml=`<div class="coupon-card__limited">
+      <div class="coupon-card__limited-label">
+        <span>${remaining.toLocaleString('es-CL')} cupos restantes</span>
+        <span>${pctUsed}% utilizado</span>
+      </div>
+      <div class="coupon-card__limited-bar-bg"><div class="coupon-card__limited-bar" data-pct="${pctUsed}" style="width:0%"></div></div>
+    </div>`;
+  }
+
+  const div=document.createElement('div');
+  div.className='coupon-card reveal';
+  div.setAttribute('data-id',c.id);
+  div.innerHTML=`
+    <div class="coupon-card__stripe ${stripeClass}"></div>
+    <div class="coupon-card__header">
+      <div class="coupon-card__logo">${c.logo}</div>
+      <div class="coupon-card__meta">
+        <div class="coupon-card__store">${esc(c.store)}</div>
+        <div class="coupon-card__name">${esc(c.name)}</div>
+        <div class="coupon-card__tags">
+          <span class="ctag ${typeTagClass}">${typeTag}</span>
+          ${c.isNew?'<span class="ctag ctag--new">✨ Nuevo</span>':''}
+          ${c.isHot?'<span class="ctag ctag--hot">🔥 Popular</span>':''}
+        </div>
+      </div>
+    </div>
+    <div class="coupon-card__benefit">
+      ${benefitDisplay}
+      <div class="coupon-card__benefit-info">
+        <div class="coupon-card__benefit-title">${esc(c.benefit)}</div>
+        <div class="coupon-card__benefit-sub">${{global:'Sin límite de uso',limited:'Cupos limitados',personal:'Solo para tu cuenta',category:'Por categoría de producto'}[c.type]||''}</div>
+      </div>
+    </div>
+    <div class="coupon-card__code-section">
+      <div class="coupon-card__code-box" id="code-${c.id}">${esc(codeDisplay)}</div>
+      ${isPersonal?`<button class="coupon-card__copy-btn" style="background:var(--pu)" onclick="claimPersonal(${c.id})">Reclamar</button>`:`<button class="coupon-card__copy-btn" data-code="${esc(codeDisplay)}" onclick="copyCode(this)">Copiar</button>`}
+    </div>
+    <div class="coupon-card__footer">
+      <div class="coupon-card__conditions"><strong>Condiciones:</strong> ${esc(c.conditions)}</div>
+      ${limitedHtml}
+    </div>
+    <div class="coupon-card__cta">
+      <div class="coupon-card__expiry ${isUrgent?'urgent':''}">
+        ${isUrgent?'⚠️':'📅'} ${isUrgent&&diffDays<=0?'Vence hoy':isUrgent?`Vence en ${diffDays}d`:`Válido hasta ${c.expiry}`}
+      </div>
+      <a href="${isPersonal?'#':'#'}" class="coupon-card__get-btn" rel="nofollow noopener noreferrer">
+        ${isPersonal?'Ver condiciones':'Obtener cupón →'}
+      </a>
+    </div>`;
+  return div;
+}
+
+/* ══ COPY ══ */
+function copyCode(btn){
+  navigator.clipboard.writeText(btn.dataset.code).then(()=>{
+    const o=btn.textContent;btn.textContent='✓ Copiado';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied');},2000);
+  }).catch(()=>{btn.textContent=btn.dataset.code;setTimeout(()=>btn.textContent='Copiar',2500);});
+}
+function claimPersonal(id){alert('Para reclamar tu cupón personal, inicia sesión en ORVIN. El código se revelará en tu perfil.');}
+
+/* ══ RENDER GRID ══ */
+function renderGrid(reset=true){
+  const filtered=applyFilters();
+  if(reset)shownCount=PAGE_SIZE;
+  const visible=filtered.slice(0,shownCount);
+  const grid=document.getElementById('coupon-grid');
+  grid.innerHTML='';
+  document.getElementById('empty-state').style.display=visible.length?'none':'block';
+  document.getElementById('load-more-wrap').style.display=filtered.length>shownCount?'block':'none';
+  document.getElementById('showing-count').textContent=visible.length;
+
+  visible.forEach(c=>{
+    const card=renderCard(c);
+    grid.appendChild(card);
+  });
+
+  // Animate bars after render
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    grid.querySelectorAll('.coupon-card__limited-bar').forEach(bar=>{
+      bar.style.transition='width 1s cubic-bezier(.4,0,.2,1)';
+      bar.style.width=bar.dataset.pct+'%';
+    });
+    grid.querySelectorAll('.reveal').forEach(el=>rvIO.observe(el));
+  }));
+
+  // Summary
+  const parts=[];
+  if(fTab!=='all')parts.push(fTab);
+  if(fCat!=='all')parts.push(fCat);
+  if(fDisc!=='all')parts.push(fDisc);
+  if(fBrand!=='all')parts.push(fBrand);
+  if(fMinDisc>0)parts.push(`≥${fMinDisc}%`);
+  if(fQuery)parts.push(`"${fQuery}"`);
+  document.getElementById('active-filters-summary').textContent=parts.length?`Filtros: ${parts.join(' · ')}`:filtered.length<COUPONS.length?'':`${COUPONS.length} cupones totales`;
+}
+
+/* ══ LOAD MORE ══ */
+document.getElementById('load-more-btn').addEventListener('click',()=>{
+  shownCount+=PAGE_SIZE;
+  renderGrid(false);
+});
+
+/* ══ TABS ══ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    fTab=btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});
+    btn.classList.add('active');btn.setAttribute('aria-selected','true');
+    renderGrid();
+  });
+});
+
+/* ══ SIDEBAR FILTER CHIPS ══ */
+function bindChips(selector,setter){
+  document.querySelectorAll(selector).forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll(selector).forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      setter(chip.dataset[Object.keys(chip.dataset)[0]]);
+      renderGrid();
+    });
+  });
+}
+bindChips('#fc-cats .filter-chip',v=>{fCat=v;});
+bindChips('#fc-discount .filter-chip',v=>{fDisc=v;});
+bindChips('#fc-brands .filter-chip',v=>{fBrand=v;});
+
+/* Type checkboxes */
+document.querySelectorAll('[data-type]').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    fTypes=Array.from(document.querySelectorAll('[data-type]:checked')).map(x=>x.dataset.type);
+    renderGrid();
+  });
+});
+
+/* Min discount range */
+const discRange=document.getElementById('min-disc-range');
+discRange.addEventListener('input',()=>{
+  fMinDisc=parseInt(discRange.value);
+  document.getElementById('min-disc-val').textContent=`Mínimo: ${fMinDisc}%`;
+  renderGrid();
+});
+
+/* Clear all */
+document.getElementById('clear-all').addEventListener('click',()=>{
+  fCat='all';fDisc='all';fBrand='all';fTypes=[];fMinDisc=0;fQuery='';fSort='new';
+  document.querySelectorAll('.filter-chip').forEach(c=>{c.classList.toggle('active',c.dataset.cat==='all'||c.dataset.disc==='all'||c.dataset.brand==='all');});
+  document.querySelectorAll('[data-type]').forEach(c=>c.checked=false);
+  discRange.value=0;document.getElementById('min-disc-val').textContent='Mínimo: 0%';
+  document.getElementById('main-q').value='';
+  document.getElementById('sort-sel').value='new';
+  renderGrid();
+});
+
+/* ══ SEARCH ══ */
+function handleSearch(val){fQuery=val;renderGrid();}
+document.getElementById('main-q').addEventListener('input',function(){handleSearch(this.value.trim());});
+document.getElementById('nav-q').addEventListener('input',function(){
+  document.getElementById('main-q').value=this.value;
+  handleSearch(this.value.trim());
+});
+
+/* ══ SORT ══ */
+document.getElementById('sort-sel').addEventListener('change',function(){fSort=this.value;renderGrid();});
+
+/* ══ MOBILE FILTER ══ */
+const sidebar=document.getElementById('filter-sidebar');
+const overlay=document.getElementById('filter-overlay');
+document.getElementById('filter-toggle-btn').addEventListener('click',()=>{
+  sidebar.classList.add('mobile-open');
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+});
+overlay.addEventListener('click',()=>{
+  sidebar.classList.remove('mobile-open');
+  overlay.classList.remove('open');
+  document.body.style.overflow='';
+});
+
+/* ══ REVEAL ══ */
+const rvIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');rvIO.unobserve(e.target);}}),{threshold:.06});
+
+/* ══ ESCAPE ══ */
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){sidebar.classList.remove('mobile-open');overlay.classList.remove('open');document.body.style.overflow='';}});
+
+/* ══ UTILS ══ */
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ══ INIT ══ */
+updateTabCounts();
+renderGrid();
+</script>
+</body>
+</html>

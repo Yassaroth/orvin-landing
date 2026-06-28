@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORVIN – Explorar Todas las Ofertas</title>
+<meta name="description" content="Explora todas las ofertas verificadas de ORVIN. Tecnología, moda, hogar, deportes y más. Filtros avanzados y las mejores ofertas para LATAM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --w:#FFF;--bg:#F7F8FA;--bg-a:#FFF4EC;
+  --am:#E8710A;--am-d:#C45D06;--am-l:#FDEBD0;
+  --nv:#1A1A2E;--nv-m:#2D2D44;
+  --gr:#6B7280;--gr-l:#E5E7EB;--gr-xl:#F3F4F6;
+  --gn:#16A34A;--gn-bg:#DCFCE7;--rd:#DC2626;--rd-bg:#FEE2E2;
+  --bl:#2563EB;--bl-bg:#EFF6FF;--pu:#7C3AED;--pu-bg:#F5F3FF;
+  --r:10px;--r-lg:18px;--r-sm:6px;
+  --sh:0 4px 16px rgba(0,0,0,.08);--sh-lg:0 12px 40px rgba(0,0,0,.11);
+  --t:.2s cubic-bezier(.4,0,.2,1);--nh:60px;
+}
+.dark{
+  --w:#1A1A2E;--bg:#0F0F1A;--bg-a:#2A1A08;
+  --nv:#E8E8F0;--nv-m:#C0C0D8;
+  --gr:#A0A0B8;--gr-l:rgba(255,255,255,.1);--gr-xl:#252540;
+  --sh:0 4px 16px rgba(0,0,0,.45);--sh-lg:0 12px 40px rgba(0,0,0,.55);
+}
+.dark body{background:#0F0F1A;color:#E8E8F0}
+.dark .nav{background:rgba(15,15,26,.97);border-color:rgba(255,255,255,.08)}
+.dark .nav__logo,.dark .sidebar-widget__title,.dark .pcard__name{color:#E8E8F0}
+.dark .pcard{background:#1A1A2E;border-color:rgba(255,255,255,.09)}
+.dark .filter-chip{background:#252540;border-color:rgba(255,255,255,.1);color:#A0A0B8}
+.dark .filter-chip.active{background:var(--am);color:#fff;border-color:var(--am)}
+.dark .sidebar-widget{background:#1A1A2E;border-color:rgba(255,255,255,.08)}
+.dark .sb-filter-item{border-color:rgba(255,255,255,.06)}
+.dark .range-input{accent-color:var(--am)}
+.dark .sort-select,.dark .search-box input{background:#252540;border-color:rgba(255,255,255,.1);color:#E8E8F0}
+.dark .mini-card{background:#252540;border-color:rgba(255,255,255,.08)}
+.dark .mini-card__name{color:#E8E8F0}
+.dark .topbar-sort{background:#252540;border-color:rgba(255,255,255,.1);color:#E8E8F0}
+.dark .breadcrumb a{color:#A0A0B8}
+.dark .hero-banner{background:linear-gradient(135deg,#0F0F1A,#1A1A2E)}
+.dark .social-btn{background:#252540;border-color:rgba(255,255,255,.08);color:#E8E8F0}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--nv);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* ══ NAV ══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nh);background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--gr-l);transition:background .3s,border-color .3s}
+.nav__inner{max-width:1440px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;gap:12px}
+.nav__logo{display:flex;align-items:center;gap:7px;font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--nv);letter-spacing:-.01em;flex-shrink:0;transition:color .3s}
+.nav__dot{width:6px;height:6px;border-radius:50%;background:var(--am);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.5);opacity:.7}}
+.nav__back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--gr);padding:6px 12px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);transition:all var(--t);flex-shrink:0}
+.nav__back:hover{border-color:var(--am);color:var(--am)}
+.nav__search-wrap{flex:1;max-width:500px;position:relative;display:flex;align-items:center}
+.nav__search-wrap input{width:100%;padding:9px 14px 9px 38px;border:1.5px solid var(--gr-l);border-radius:30px;font-size:13px;font-family:'Inter',sans-serif;color:var(--nv);background:var(--bg);outline:none;transition:all var(--t)}
+.nav__search-wrap input:focus{border-color:var(--am);background:var(--w);box-shadow:0 0 0 3px rgba(232,113,10,.1)}
+.nav__search-wrap input::placeholder{color:var(--gr)}
+.nav__search-icon{position:absolute;left:12px;color:var(--gr);font-size:14px;pointer-events:none}
+.nav__right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav__theme{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--gr-l);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all var(--t)}
+.nav__theme:hover{border-color:var(--am);background:var(--am);color:#fff}
+.nav__coupon-link{padding:8px 14px;background:var(--am-d);color:#fff;font-size:12px;font-weight:600;border-radius:var(--r-sm);transition:background var(--t);white-space:nowrap}
+.nav__coupon-link:hover{background:var(--am)}
+@media(max-width:640px){.nav__search-wrap{max-width:160px}.nav__coupon-link{display:none}}
+
+/* ══ HERO BANNER ══ */
+.hero-banner{
+  margin-top:var(--nh);
+  background:linear-gradient(135deg,#1A1A2E 0%,#2D2D44 60%,#1A2A3A 100%);
+  padding:40px 24px 32px;position:relative;overflow:hidden;
+}
+.hero-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23fff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;pointer-events:none}
+.hero-banner__inner{max-width:1440px;margin:0 auto;position:relative;z-index:1}
+.hero-banner__eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(232,113,10,.15);border:1px solid rgba(232,113,10,.3);border-radius:30px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--am);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.hero-banner__title{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,46px);font-weight:900;color:#fff;line-height:1.08;letter-spacing:-.02em;margin-bottom:10px}
+.hero-banner__title em{font-style:italic;color:var(--am)}
+.hero-banner__sub{font-size:15px;color:rgba(255,255,255,.55);max-width:500px;margin-bottom:24px;line-height:1.6}
+/* Quick sort pills */
+.quick-sort{display:flex;gap:8px;flex-wrap:wrap}
+.qs-btn{padding:8px 16px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);border-radius:30px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);transition:all var(--t);white-space:nowrap;cursor:pointer}
+.qs-btn:hover,.qs-btn.active{background:var(--am);border-color:var(--am);color:#fff}
+
+/* ══ BREADCRUMB ══ */
+.breadcrumb{max-width:1440px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gr)}
+.breadcrumb a{color:var(--gr);transition:color var(--t)}
+.breadcrumb a:hover{color:var(--am)}
+.breadcrumb span{color:var(--gr)}
+
+/* ══ PAGE LAYOUT ══ */
+.page-layout{max-width:1440px;margin:0 auto;padding:0 24px 60px;display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start}
+@media(max-width:1100px){.page-layout{grid-template-columns:240px 1fr}}
+@media(max-width:860px){.page-layout{grid-template-columns:1fr}.left-sidebar{display:none}.left-sidebar.mob-open{display:block;position:fixed;left:0;top:0;bottom:0;z-index:700;width:min(320px,90vw);border-radius:0;border:none;overflow-y:auto;max-height:100vh}}
+
+/* ══ LEFT SIDEBAR ══ */
+.left-sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:calc(var(--nh) + 16px)}
+.sidebar-widget{background:var(--w);border:1.5px solid var(--gr-l);border-radius:var(--r-lg);overflow:hidden;transition:background .3s,border-color .3s}
+.sidebar-widget__header{padding:14px 18px 10px;border-bottom:1px solid var(--gr-l)}
+.sidebar-widget__title{font-size:13px;font-weight:700;color:var(--nv);display:flex;align-items:center;gap:7px;transition:color .3s}
+.sidebar-widget__body{padding:14px 18px}
+
+/* Filter groups */
+.sb-filter-group{margin-bottom:16px}
+.sb-filter-group:last-child{margin-bottom:0}
+.sb-filter-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gr);margin-bottom:9px}
+.sb-filter-items{display:flex;flex-direction:column;gap:2px}
+.sb-filter-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:var(--r-sm);cursor:pointer;transition:background var(--t);border-bottom:none}
+.sb-filter-item:hover{background:var(--gr-xl)}
+.sb-filter-item label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--nv);cursor:pointer;flex:1;transition:color .3s}
+.sb-filter-item input{accent-color:var(--am);width:14px;height:14px;cursor:pointer}
+.sb-filter-item .count{font-size:11px;color:var(--gr);background:var(--gr-xl);padding:1px 7px;border-radius:20px}
+/* Price range */
+.range-wrap{padding:4px 0}
+.range-input{width:100%;accent-color:var(--am);cursor:pointer}
+.range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--gr);margin-top:6px}
+/* Active price inputs */
+.price-inputs{display:flex;gap:8px;margin-top:10px}
+.price-input{flex:1;padding:7px 10px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);font-size:12px;color:var(--nv);background:var(--w);outline:none;transition:border-color var(--t);font-family:'Inter',sans-serif}
+.price-input:focus{border-color:var(--am)}
+
+/* Social widget */
+.social-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1.5px solid var(--gr-l);border-radius:var(--r-sm);font-size:13px;font-weight:500;color:var(--nv);margin-bottom:7px;transition:all var(--t);cursor:pointer}
+.social-btn:last-child{margin-bottom:0}
+.social-btn:hover{border-color:var(--am);background:var(--bg-a);color:var(--am)}
+.social-btn__icon{font-size:18px;width:24px;text-align:center}
+.social-btn__text{flex:1}
+.social-btn__followers{font-size:11px;color:var(--gr)}
+
+/* Mini product card for sidebar */
+.mini-card{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1.5px solid var(--gr-l);border-radius:var(--r-sm);margin-bottom:8px;transition:all var(--t);cursor:pointer}
+.mini-card:last-child{margin-bottom:0}
+.mini-card:hover{border-color:var(--am);background:var(--bg-a)}
+.mini-card__icon{font-size:22px;flex-shrink:0;width:32px;text-align:center}
+.mini-card__info{flex:1;min-width:0}
+.mini-card__name{font-size:12px;font-weight:600;color:var(--nv);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .3s}
+.mini-card__price{font-size:13px;font-weight:700;color:var(--am)}
+.mini-card__saving{font-size:10px;font-weight:700;background:var(--gn-bg);color:var(--gn);padding:1px 6px;border-radius:20px;display:inline-block;margin-top:2px}
+
+/* Active coupon mini */
+.coup-mini{padding:10px 12px;background:linear-gradient(135deg,var(--bg-a),var(--w));border:1.5px solid var(--am-l);border-radius:var(--r-sm);margin-bottom:8px;cursor:pointer;transition:all var(--t)}
+.coup-mini:hover{border-color:var(--am);box-shadow:var(--sh)}
+.coup-mini__store{font-size:11px;font-weight:600;color:var(--am);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.coup-mini__desc{font-size:12px;color:var(--nv);font-weight:500;margin-bottom:5px;transition:color .3s}
+.coup-mini__code{font-family:monospace;font-size:13px;font-weight:700;color:var(--am-d);background:var(--am-l);padding:3px 8px;border-radius:4px;display:inline-block}
+
+/* ══ CONTENT AREA ══ */
+.content-area__top{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.results-count{font-size:13px;color:var(--gr);flex:1}
+.results-count strong{color:var(--nv)}
+.topbar-sort{padding:8px 28px 8px 12px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);font-size:13px;color:var(--nv);background:var(--w);appearance:none;outline:none;cursor:pointer;font-family:'Inter',sans-serif;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color var(--t)}
+.topbar-sort:focus{border-color:var(--am)}
+.view-btns{display:flex;gap:4px}
+.view-btn{width:32px;height:32px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gr);transition:all var(--t)}
+.view-btn.active,.view-btn:hover{border-color:var(--am);color:var(--am);background:var(--bg-a)}
+.mob-filter-btn{display:none;align-items:center;gap:6px;padding:8px 13px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);font-size:13px;font-weight:500;color:var(--nv);transition:all var(--t)}
+.mob-filter-btn:hover{border-color:var(--am);color:var(--am)}
+@media(max-width:860px){.mob-filter-btn{display:flex}}
+
+/* Category quick filters */
+.cat-quick-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-chip{padding:7px 14px;border:1.5px solid var(--gr-l);border-radius:30px;font-size:12px;font-weight:500;color:var(--gr);background:var(--w);transition:all var(--t);cursor:pointer;white-space:nowrap}
+.filter-chip:hover{border-color:var(--am);color:var(--am)}
+.filter-chip.active{background:var(--am);border-color:var(--am);color:#fff}
+
+/* ══ PRODUCT GRID ══ */
+.product-grid{display:grid;gap:16px}
+.product-grid.grid-4{grid-template-columns:repeat(4,1fr)}
+.product-grid.grid-3{grid-template-columns:repeat(3,1fr)}
+.product-grid.grid-list{grid-template-columns:1fr}
+@media(max-width:1300px){.product-grid.grid-4{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.product-grid.grid-4,.product-grid.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.product-grid.grid-4,.product-grid.grid-3{grid-template-columns:1fr}}
+
+/* ══ PRODUCT CARD ══ */
+.pcard{background:var(--w);border:1.5px solid var(--gr-l);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform var(--t),box-shadow var(--t),border-color var(--t);position:relative}
+.pcard:hover{transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:rgba(232,113,10,.25)}
+.pcard--featured{border-color:var(--am)}
+.pcard__img{width:100%;aspect-ratio:1;background:var(--gr-xl);display:flex;align-items:center;justify-content:center;font-size:52px;position:relative;overflow:hidden}
+.pcard__img-inner{transition:transform .35s ease}
+.pcard:hover .pcard__img-inner{transform:scale(1.06)}
+.pcard__badges{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:5px}
+.pbadge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap}
+.pbadge--hot{background:var(--rd-bg);color:var(--rd)}
+.pbadge--new{background:var(--bl-bg);color:var(--bl)}
+.pbadge--save{background:var(--gn-bg);color:var(--gn)}
+.pcard__save-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.9);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-size:14px;border:1.5px solid var(--gr-l);transition:all var(--t);cursor:pointer;z-index:1}
+.pcard__save-btn:hover,.pcard__save-btn.saved{border-color:var(--am);background:var(--am);color:#fff}
+.pcard__body{padding:12px 14px;flex:1}
+.pcard__cat{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--am);margin-bottom:5px}
+.pcard__name{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--nv);line-height:1.3;margin-bottom:4px;transition:color .3s}
+.pcard__store{font-size:11px;color:var(--gr);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.pcard__store-badge{font-size:9px;font-weight:700;color:var(--gn);background:var(--gn-bg);padding:1px 5px;border-radius:10px}
+.pcard__prices{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.pcard__before{font-size:11px;color:var(--rd);text-decoration:line-through;opacity:.7}
+.pcard__now{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--nv)}
+.pcard__saving{font-size:11px;font-weight:700;background:var(--gn-bg);color:var(--gn);padding:2px 7px;border-radius:20px}
+/* Rating */
+.pcard__rating{display:flex;align-items:center;gap:5px;margin-bottom:6px}
+.pcard__stars{color:var(--am);font-size:11px;letter-spacing:1px}
+.pcard__rating-num{font-size:11px;color:var(--gr)}
+/* Score bar */
+.pcard__score{margin-bottom:10px}
+.pcard__score-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--gr);margin-bottom:3px}
+.pcard__score-lbl span:last-child{font-weight:700;color:var(--am)}
+.pcard__score-track{height:3px;background:var(--gr-l);border-radius:3px;overflow:hidden}
+.pcard__score-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--am-l),var(--am));width:0%;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.pcard__footer{padding:0 14px 14px;display:flex;gap:8px;align-items:center}
+.pcard__cta{flex:1;text-align:center;padding:10px;background:var(--nv);color:#fff;font-size:12px;font-weight:700;border-radius:var(--r-sm);transition:background var(--t)}
+.pcard:hover .pcard__cta{background:var(--am)}
+.pcard--featured .pcard__cta{background:var(--am)}
+.pcard--featured:hover .pcard__cta{background:var(--am-d)}
+.pcard__wish{width:34px;height:34px;border:1.5px solid var(--gr-l);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gr);transition:all var(--t);cursor:pointer;flex-shrink:0}
+.pcard__wish:hover{border-color:var(--am);color:var(--am)}
+
+/* LIST VIEW variant */
+.product-grid.grid-list .pcard{flex-direction:row;height:160px}
+.product-grid.grid-list .pcard__img{width:160px;min-width:160px;aspect-ratio:1;height:100%}
+.product-grid.grid-list .pcard__body{padding:14px 16px}
+.product-grid.grid-list .pcard__footer{flex-direction:row;padding:0 16px 14px}
+.product-grid.grid-list .pcard__name{font-size:16px}
+@media(max-width:500px){.product-grid.grid-list .pcard{flex-direction:column;height:auto}.product-grid.grid-list .pcard__img{width:100%;height:auto}}
+
+/* ══ LOAD MORE ══ */
+.load-more-wrap{display:flex;justify-content:center;margin:36px 0 0}
+.load-more-btn{padding:14px 44px;background:var(--w);border:2px solid var(--am);color:var(--am);font-size:14px;font-weight:700;border-radius:var(--r-sm);transition:all var(--t)}
+.load-more-btn:hover{background:var(--am);color:#fff}
+
+/* ══ EMPTY ══ */
+.empty-state{text-align:center;padding:80px 24px;color:var(--gr)}
+.empty-state__icon{font-size:48px;margin-bottom:14px}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--nv);margin-bottom:8px;transition:color .3s}
+
+/* ══ OVERLAY ══ */
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:699;backdrop-filter:blur(4px)}
+.mob-overlay.open{display:block}
+
+/* ══ REVEAL ══ */
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" aria-label="Navegación">
+  <div class="nav__inner">
+    <a href="orvin-v7.html" class="nav__back">&#8592; Volver</a>
+    <a href="orvin-v7.html" class="nav__logo"><div class="nav__dot" aria-hidden="true"></div>ORVIN</a>
+    <div class="nav__search-wrap" role="search">
+      <span class="nav__search-icon" aria-hidden="true">🔍</span>
+      <label for="nav-q" class="sr-only">Buscar productos</label>
+      <input type="search" id="nav-q" placeholder="Buscar productos, marcas, tiendas...">
+    </div>
+    <div class="nav__right">
+      <button class="nav__theme" id="theme-btn" aria-label="Cambiar tema">🌙</button>
+      <a href="orvin_cupones.html" class="nav__coupon-link">🎫 Ver cupones</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO BANNER -->
+<section class="hero-banner" aria-label="Explorar ofertas">
+  <div class="hero-banner__inner">
+    <div class="hero-banner__eyebrow">🔥 Vitrina ORVIN — Actualizado hoy</div>
+    <h1 class="hero-banner__title">Explora las mejores<br><em>ofertas verificadas</em></h1>
+    <p class="hero-banner__sub">Tecnología, moda, hogar, deportes y más. Precios verificados con historial real. ORVIN Score en cada producto.</p>
+    <div class="quick-sort" role="group" aria-label="Orden rápido">
+      <button class="qs-btn active" data-sort="score">⭐ ORVIN Score</button>
+      <button class="qs-btn" data-sort="saving">🏷️ Mayor descuento</button>
+      <button class="qs-btn" data-sort="price-asc">📉 Precio más bajo</button>
+      <button class="qs-btn" data-sort="price-desc">📈 Precio más alto</button>
+      <button class="qs-btn" data-sort="new">✨ Más recientes</button>
+      <button class="qs-btn" data-sort="popular">🔥 Más populares</button>
+    </div>
+  </div>
+</section>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" aria-label="Ruta de navegación">
+  <a href="orvin-v7.html">ORVIN</a>
+  <span>›</span>
+  <span id="bc-current">Todas las ofertas</span>
+</div>
+
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="left-sidebar" id="left-sidebar" aria-label="Filtros y herramientas">
+
+    <!-- FILTROS -->
+    <div class="sidebar-widget">
+      <div class="sidebar-widget__header">
+        <div class="sidebar-widget__title">⚙️ Filtros <button id="clear-filters" style="font-size:11px;color:var(--am);font-weight:600;margin-left:auto;cursor:pointer;background:none;border:none">Limpiar</button></div>
+      </div>
+      <div class="sidebar-widget__body">
+
+        <!-- Categoría -->
+        <div class="sb-filter-group">
+          <div class="sb-filter-label">Categoría</div>
+          <div class="sb-filter-items" id="cat-filters">
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="all" checked> Todas las categorías</label><span class="count" id="cnt-all">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="tecnologia"> 💻 Tecnología</label><span class="count" id="cnt-tec">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="ropa"> 👗 Ropa y Calzados</label><span class="count" id="cnt-ropa">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="hogar"> 🏠 Hogar</label><span class="count" id="cnt-hogar">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="deportes"> ⚽ Deportes</label><span class="count" id="cnt-dep">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="entrete"> 🎮 Entretenimiento</label><span class="count" id="cnt-ent">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="instrumentos"> 🎸 Instrumentos</label><span class="count" id="cnt-ins">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="juguetes"> 🧸 Juguetes</label><span class="count" id="cnt-jug">0</span></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fcat" value="mascotas"> 🐾 Mascotas</label><span class="count" id="cnt-mas">0</span></div>
+          </div>
+        </div>
+
+        <!-- Rango de precio -->
+        <div class="sb-filter-group">
+          <div class="sb-filter-label">Rango de precio</div>
+          <div class="range-wrap">
+            <input type="range" class="range-input" id="max-price" min="10000" max="1600000" value="1600000" step="10000">
+            <div class="range-labels"><span>$10K</span><span id="max-price-lbl">Hasta: $1.600.000</span><span>$1.6M</span></div>
+          </div>
+          <div class="price-inputs">
+            <input type="number" class="price-input" id="min-p" placeholder="Mín $" min="0">
+            <input type="number" class="price-input" id="max-p" placeholder="Máx $" max="2000000">
+          </div>
+        </div>
+
+        <!-- Marca -->
+        <div class="sb-filter-group">
+          <div class="sb-filter-label">Marca / Tienda</div>
+          <div class="sb-filter-items" id="brand-filters"></div>
+        </div>
+
+        <!-- Descuento mínimo -->
+        <div class="sb-filter-group">
+          <div class="sb-filter-label">Descuento mínimo</div>
+          <div class="range-wrap">
+            <input type="range" class="range-input" id="min-disc" min="0" max="60" value="0" step="5">
+            <div class="range-labels"><span>0%</span><span id="min-disc-lbl">Mínimo: 0%</span><span>60%</span></div>
+          </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="sb-filter-group">
+          <div class="sb-filter-label">Estado del producto</div>
+          <div class="sb-filter-items">
+            <div class="sb-filter-item"><label><input type="radio" name="fstate" value="all" checked> Todos</label></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fstate" value="new"> ✨ Nuevos</label></div>
+            <div class="sb-filter-item"><label><input type="radio" name="fstate" value="hot"> 🔥 Populares (HOT)</label></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COMUNIDAD -->
+    <div class="sidebar-widget">
+      <div class="sidebar-widget__header">
+        <div class="sidebar-widget__title">🌐 Comunidad ORVIN</div>
+      </div>
+      <div class="sidebar-widget__body">
+        <a href="#" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span class="social-btn__icon">💬</span>
+          <div class="social-btn__text">Discord<div class="social-btn__followers">+8.400 miembros activos</div></div>
+          <span>→</span>
+        </a>
+        <a href="#" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span class="social-btn__icon">📸</span>
+          <div class="social-btn__text">Instagram<div class="social-btn__followers">@orvin_ofertas · 12K</div></div>
+          <span>→</span>
+        </a>
+        <a href="#" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span class="social-btn__icon">🎵</span>
+          <div class="social-btn__text">TikTok<div class="social-btn__followers">@orvin.latam · 34K</div></div>
+          <span>→</span>
+        </a>
+        <a href="#" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span class="social-btn__icon">📘</span>
+          <div class="social-btn__text">Facebook<div class="social-btn__followers">Grupo ORVIN · 6K</div></div>
+          <span>→</span>
+        </a>
+        <a href="#" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span class="social-btn__icon">▶️</span>
+          <div class="social-btn__text">YouTube<div class="social-btn__followers">Reviews y comparativas</div></div>
+          <span>→</span>
+        </a>
+        <a href="#" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span class="social-btn__icon">📱</span>
+          <div class="social-btn__text">WhatsApp<div class="social-btn__followers">Alertas de ofertas</div></div>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- DESTACADOS DEL DÍA -->
+    <div class="sidebar-widget">
+      <div class="sidebar-widget__header">
+        <div class="sidebar-widget__title">⭐ Destacados hoy</div>
+      </div>
+      <div class="sidebar-widget__body" id="sb-featured"></div>
+    </div>
+
+    <!-- CUPONES ACTIVOS -->
+    <div class="sidebar-widget">
+      <div class="sidebar-widget__header">
+        <div class="sidebar-widget__title">🎫 Cupones activos</div>
+      </div>
+      <div class="sidebar-widget__body" id="sb-coupons">
+        <div class="coup-mini"><div class="coup-mini__store">Falabella</div><div class="coup-mini__desc">15% en tecnología</div><span class="coup-mini__code">FALA15</span></div>
+        <div class="coup-mini"><div class="coup-mini__store">Nike</div><div class="coup-mini__desc">Envío gratis sin mínimo</div><span class="coup-mini__code">NIKEFREE</span></div>
+        <div class="coup-mini"><div class="coup-mini__store">Adidas</div><div class="coup-mini__desc">20% en calzado</div><span class="coup-mini__code">ADIDAS20</span></div>
+        <div class="coup-mini"><div class="coup-mini__store">Petco</div><div class="coup-mini__desc">15% en alimentos premium</div><span class="coup-mini__code">PETCO15</span></div>
+        <a href="orvin_cupones.html" style="display:block;text-align:center;margin-top:10px;font-size:12px;font-weight:600;color:var(--am)">Ver todos los cupones →</a>
+      </div>
+    </div>
+
+    <!-- RECOMENDACIONES -->
+    <div class="sidebar-widget">
+      <div class="sidebar-widget__header">
+        <div class="sidebar-widget__title">💡 Recomendados</div>
+      </div>
+      <div class="sidebar-widget__body" id="sb-recs"></div>
+    </div>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <main aria-label="Listado de productos">
+    <div class="content-area__top">
+      <span class="results-count" id="results-count"><strong>0</strong> productos encontrados</span>
+      <select class="topbar-sort" id="topbar-sort" aria-label="Ordenar productos">
+        <option value="score">ORVIN Score</option>
+        <option value="saving">Mayor descuento</option>
+        <option value="price-asc">Menor precio</option>
+        <option value="price-desc">Mayor precio</option>
+        <option value="new">Más recientes</option>
+        <option value="popular">Más populares</option>
+        <option value="alpha">A–Z</option>
+      </select>
+      <div class="view-btns" role="group" aria-label="Vista">
+        <button class="view-btn active" data-view="grid-4" aria-label="Cuadrícula 4">⊞</button>
+        <button class="view-btn" data-view="grid-3" aria-label="Cuadrícula 3">⊟</button>
+        <button class="view-btn" data-view="grid-list" aria-label="Lista">☰</button>
+      </div>
+      <button class="mob-filter-btn" id="mob-filter-btn" aria-label="Mostrar filtros">⚙️ Filtros</button>
+    </div>
+
+    <div class="cat-quick-filters" id="cat-quick-filters" role="group" aria-label="Filtro rápido por categoría"></div>
+
+    <div class="product-grid grid-4" id="product-grid"></div>
+
+    <div id="empty-state" class="empty-state" style="display:none">
+      <div class="empty-state__icon">🔍</div>
+      <h3>Sin resultados</h3>
+      <p>Prueba con otros filtros o busca otro producto.</p>
+    </div>
+
+    <div class="load-more-wrap" id="load-more-wrap">
+      <button class="load-more-btn" id="load-more-btn">Cargar más productos</button>
+    </div>
+  </main>
+</div>
+
+<!-- Mobile overlay -->
+<div class="mob-overlay" id="mob-overlay"></div>
+
+<script>
+/* ══ ALL DEALS DATA ══ */
+const ALL_DEALS=[
+  {id:1,  name:'Audífonos Sony WH-1000XM5',cat:'tecnologia',icon:'🎧',store:'Falabella', price:289990,before:459990,badge:'HOT', score:92,isNew:false,isHot:true,  votes:124},
+  {id:2,  name:'SSD Samsung 990 Pro 1TB',  cat:'tecnologia',icon:'💾',store:'MercadoLibre',price:79990,before:129990,score:86,isNew:true, isHot:false,votes:89},
+  {id:6,  name:'Monitor LG 27" 4K IPS',    cat:'tecnologia',icon:'🖥️',store:'Linio',     price:249990,before:389990,badge:'HOT',score:90,isNew:false,isHot:true, votes:88},
+  {id:11, name:'MacBook Air M2 2023',       cat:'tecnologia',icon:'💻',store:'Apple Store',price:899990,before:1199990,score:84,isNew:false,isHot:false,votes:201},
+  {id:12, name:'iPhone 15 Pro 256GB',       cat:'tecnologia',icon:'📱',store:'Entel',      price:999990,before:1299990,score:80,isNew:false,isHot:false,votes:156},
+  {id:13, name:'Tablet Samsung Galaxy Tab S9',cat:'tecnologia',icon:'📲',store:'Falabella',price:549990,before:749990,score:76,isNew:false,isHot:false,votes:63},
+  {id:14, name:'Cámara Sony Alpha A7 III',  cat:'tecnologia',icon:'📷',store:'Sony Store', price:1499990,before:1899990,badge:'NEW',score:88,isNew:true,isHot:false,votes:45},
+  {id:15, name:'Router WiFi 6 TP-Link',     cat:'tecnologia',icon:'📶',store:'PC Factory', price:129990,before:189990,score:74,isNew:false,isHot:false,votes:38},
+  {id:26, name:'Teclado Logitech G915',     cat:'tecnologia',icon:'⌨️',store:'Logitech',  price:149990,before:229990,score:85,isNew:false,isHot:false,votes:72},
+  {id:27, name:'Auriculares Bose QC45',     cat:'tecnologia',icon:'🎵',store:'Bose',       price:199990,before:329990,score:83,isNew:false,isHot:false,votes:55},
+  {id:28, name:'Apple Watch Series 9',      cat:'tecnologia',icon:'⌚',store:'Apple Store',price:349990,before:479990,score:81,isNew:false,isHot:false,votes:91},
+  {id:29, name:'Mouse Razer DeathAdder',    cat:'tecnologia',icon:'🖱️',store:'PC Factory', price:39990,before:69990,score:79,isNew:false,isHot:false,votes:47},
+  {id:4,  name:'Nike Air Max 270',          cat:'ropa',       icon:'👟',store:'Nike',       price:74990,before:119990,badge:'HOT',score:79,isNew:false,isHot:true,votes:47},
+  {id:7,  name:'Adidas Ultraboost 23',      cat:'ropa',       icon:'👟',store:'Adidas',     price:89990,before:149990,score:82,isNew:false,isHot:false,votes:63},
+  {id:16, name:'Chaqueta Columbia',         cat:'ropa',       icon:'🧥',store:'Columbia',   price:59990,before:99990,score:77,isNew:false,isHot:false,votes:29},
+  {id:17, name:"Jeans Levi's 501",          cat:'ropa',       icon:'👖',store:"Levi's",     price:39990,before:69990,score:73,isNew:false,isHot:false,votes:21},
+  {id:18, name:'Polerón Puma Essentials',   cat:'ropa',       icon:'👕',store:'Puma',       price:29990,before:49990,score:71,isNew:false,isHot:false,votes:18},
+  {id:19, name:'Botines Caterpillar',       cat:'ropa',       icon:'🥾',store:'Caterpillar',price:69990,before:109990,score:75,isNew:false,isHot:false,votes:32},
+  {id:30, name:'Camiseta Under Armour',     cat:'ropa',       icon:'🏃',store:'Under Armour',price:19990,before:34990,score:68,isNew:true,isHot:false,votes:14},
+  {id:31, name:'Vestido Zara Floral',       cat:'ropa',       icon:'👗',store:'Zara',       price:29990,before:49990,score:70,isNew:true,isHot:false,votes:19},
+  {id:60, name:'Parka North Face',          cat:'ropa',       icon:'🧤',store:'North Face',  price:129990,before:199990,badge:'NEW',score:84,isNew:true,isHot:false,votes:41},
+  {id:61, name:'Zapatillas New Balance 574',cat:'ropa',       icon:'👟',store:'New Balance', price:79990,before:119990,score:78,isNew:true,isHot:false,votes:36},
+  {id:3,  name:'Robot Aspirador Xiaomi S10+',cat:'hogar',     icon:'🤖',store:'Paris',      price:219990,before:349990,badge:'HOT',score:85,isNew:false,isHot:true,votes:71},
+  {id:8,  name:'Sofá Cama 3 Plazas',        cat:'hogar',      icon:'🛋️',store:'Falabella',  price:199990,before:349990,score:76,isNew:false,isHot:false,votes:33},
+  {id:9,  name:'Mesa de Comedor Expandible',cat:'hogar',      icon:'🍽️',store:'Easy',      price:159990,before:279990,score:78,isNew:false,isHot:false,votes:27},
+  {id:10, name:'Colchón Memory Foam King',  cat:'hogar',      icon:'🛏️',store:'Rosen',      price:299990,before:499990,score:87,isNew:false,isHot:false,votes:58},
+  {id:20, name:'Escritorio Eléctrico',      cat:'hogar',      icon:'🪑',store:'IKEA',       price:249990,before:399990,badge:'NEW',score:82,isNew:true,isHot:false,votes:44},
+  {id:21, name:'Lavadora Samsung 10kg',     cat:'hogar',      icon:'🫧',store:'Ripley',     price:349990,before:499990,score:73,isNew:false,isHot:false,votes:22},
+  {id:22, name:'Refrigerador LG Door-in-Door',cat:'hogar',   icon:'❄️',store:'LG Store',    price:699990,before:999990,score:80,isNew:false,isHot:false,votes:39},
+  {id:32, name:'Cafetera Nespresso Vertuo', cat:'hogar',      icon:'☕',store:'Nespresso',   price:89990,before:149990,score:81,isNew:false,isHot:false,votes:52},
+  {id:62, name:'Microondas Samsung 28L',    cat:'hogar',      icon:'🔥',store:'Falabella',   price:79990,before:129990,score:69,isNew:false,isHot:false,votes:16},
+  {id:63, name:'Plancha Rowenta Pro',       cat:'hogar',      icon:'👔',store:'Ripley',      price:49990,before:89990,score:67,isNew:false,isHot:false,votes:12},
+  {id:5,  name:'Bicicleta Spinning Proform',cat:'deportes',   icon:'🚴',store:'Ripley',      price:379990,before:599990,badge:'HOT',score:81,isNew:false,isHot:true,votes:38},
+  {id:23, name:'Mancuernas Ajustables 24kg',cat:'deportes',   icon:'🏋️',store:'Decathlon',  price:89990,before:149990,score:77,isNew:false,isHot:false,votes:29},
+  {id:24, name:'Caminadora Reebok',         cat:'deportes',   icon:'🏃',store:'Reebok',      price:449990,before:699990,score:79,isNew:false,isHot:false,votes:34},
+  {id:25, name:'Bicicleta MTB Trek Marlin 7',cat:'deportes',  icon:'🚵',store:'Trek',        price:599990,before:849990,badge:'NEW',score:85,isNew:true,isHot:false,votes:46},
+  {id:33, name:'Raqueta Wilson Pro',        cat:'deportes',   icon:'🎾',store:'Wilson',       price:79990,before:129990,score:74,isNew:false,isHot:false,votes:21},
+  {id:34, name:'Kayak Inflable Intex',      cat:'deportes',   icon:'🚣',store:'Intex',        price:129990,before:199990,score:70,isNew:false,isHot:false,votes:15},
+  {id:64, name:'Cancha Portátil Basketball',cat:'deportes',   icon:'🏀',store:'Decathlon',    price:59990,before:99990,score:68,isNew:false,isHot:false,votes:11},
+  {id:65, name:'Pelota Fútbol Adidas',      cat:'deportes',   icon:'⚽',store:'Adidas',       price:29990,before:49990,score:66,isNew:false,isHot:false,votes:9},
+  {id:66, name:'Guantes Boxeo Everlast',    cat:'deportes',   icon:'🥊',store:'Everlast',     price:39990,before:69990,score:72,isNew:true,isHot:false,votes:18},
+  {id:70, name:'PlayStation 5 Slim Digital',cat:'entrete',    icon:'🎮',store:'Paris',         price:449990,before:579990,badge:'HOT',score:90,isNew:false,isHot:true,votes:312},
+  {id:71, name:'Steam Deck OLED 512GB',     cat:'entrete',    icon:'🕹️',store:'PC Factory',   price:649990,before:849990,badge:'NEW',score:93,isNew:true,isHot:true,votes:187},
+  {id:72, name:'Nintendo Switch OLED',      cat:'entrete',    icon:'🎰',store:'Falabella',     price:349990,before:449990,score:87,isNew:false,isHot:true,votes:201},
+  {id:73, name:'Xbox Series S 1TB',         cat:'entrete',    icon:'🎯',store:'Ripley',        price:299990,before:399990,score:84,isNew:false,isHot:false,votes:134},
+  {id:74, name:'Meta Quest 3 VR',           cat:'entrete',    icon:'🥽',store:'Linio',         price:599990,before:799990,badge:'NEW',score:89,isNew:true,isHot:false,votes:76},
+  {id:75, name:'Projector Anker Nebula',    cat:'entrete',    icon:'📽️',store:'Linio',        price:199990,before:299990,score:80,isNew:false,isHot:false,votes:45},
+  {id:76, name:'Smart TV LG 55" OLED',      cat:'entrete',    icon:'📺',store:'LG Store',      price:799990,before:1199990,badge:'HOT',score:91,isNew:false,isHot:true,votes:267},
+  {id:77, name:'Soundbar Samsung HW-Q60',   cat:'entrete',    icon:'🔊',store:'Samsung',       price:179990,before:279990,score:78,isNew:false,isHot:false,votes:39},
+  {id:78, name:'Chromecast 4K Google',      cat:'entrete',    icon:'📡',store:'PC Factory',    price:49990,before:79990,score:72,isNew:false,isHot:false,votes:28},
+  {id:80, name:'Guitarra Fender Stratocaster',cat:'instrumentos',icon:'🎸',store:'Fender Store',price:699990,before:999990,badge:'NEW',score:91,isNew:true,isHot:false,votes:38},
+  {id:81, name:'Piano Digital Yamaha P-145',cat:'instrumentos',icon:'🎹',store:'Yamaha',       price:499990,before:699990,score:88,isNew:false,isHot:false,votes:29},
+  {id:82, name:'Batería Electrónica Roland', cat:'instrumentos',icon:'🥁',store:'Roland',      price:899990,before:1299990,badge:'HOT',score:90,isNew:false,isHot:true,votes:22},
+  {id:83, name:'Ukelele Kala Tenor',         cat:'instrumentos',icon:'🪗',store:'Decathlon',   price:49990,before:79990,score:71,isNew:false,isHot:false,votes:14},
+  {id:84, name:'Micrófono Blue Yeti',        cat:'instrumentos',icon:'🎙️',store:'PC Factory',  price:149990,before:229990,score:83,isNew:false,isHot:false,votes:31},
+  {id:85, name:'Violín Stentor Student II',  cat:'instrumentos',icon:'🎻',store:'Falabella',   price:179990,before:279990,score:76,isNew:false,isHot:false,votes:17},
+  {id:86, name:'Bajo Eléctrico Fender Jazz', cat:'instrumentos',icon:'🎸',store:'Fender Store', price:599990,before:849990,score:87,isNew:false,isHot:false,votes:19},
+  {id:87, name:'Amplificador Marshall MG15', cat:'instrumentos',icon:'🔌',store:'Linio',       price:99990,before:159990,score:74,isNew:false,isHot:false,votes:12},
+  {id:90, name:'LEGO Technic Bugatti',       cat:'juguetes',   icon:'🧱',store:'Falabella',    price:149990,before:219990,badge:'HOT',score:89,isNew:false,isHot:true,votes:94},
+  {id:91, name:'Playmobil Ciudad Policía',   cat:'juguetes',   icon:'🚓',store:'Ripley',        price:59990,before:89990,score:72,isNew:false,isHot:false,votes:31},
+  {id:92, name:'Barbie Dreamhouse 2024',     cat:'juguetes',   icon:'🏠',store:'Falabella',    price:79990,before:119990,score:74,isNew:true,isHot:false,votes:41},
+  {id:93, name:'Hot Wheels Pista Loop',      cat:'juguetes',   icon:'🏎️',store:'Paris',       price:34990,before:54990,score:68,isNew:false,isHot:false,votes:19},
+  {id:94, name:'Rompecabezas 3D Imperio',    cat:'juguetes',   icon:'🧩',store:'Linio',        price:29990,before:49990,score:66,isNew:false,isHot:false,votes:14},
+  {id:95, name:'Juego de Mesa Catan',        cat:'juguetes',   icon:'🎲',store:'Decathlon',    price:49990,before:74990,badge:'NEW',score:82,isNew:true,isHot:false,votes:37},
+  {id:96, name:'Drone DJI Mini 3 Pro',       cat:'juguetes',   icon:'🚁',store:'DJI Store',    price:499990,before:699990,badge:'HOT',score:92,isNew:false,isHot:true,votes:112},
+  {id:97, name:'Set de Arte Crayola Deluxe', cat:'juguetes',   icon:'🎨',store:'Paris',        price:24990,before:39990,score:65,isNew:false,isHot:false,votes:8},
+  {id:98, name:'Nerf Elite 2.0 Commander',   cat:'juguetes',   icon:'🔫',store:'Ripley',       price:29990,before:49990,score:69,isNew:false,isHot:false,votes:16},
+  {id:100,name:'Cama Ortopédica para Perro', cat:'mascotas',   icon:'🐕',store:'Petco',        price:49990,before:79990,badge:'NEW',score:79,isNew:true,isHot:false,votes:28},
+  {id:101,name:'Rascador Árbol para Gato',   cat:'mascotas',   icon:'🐈',store:'Petco',        price:39990,before:64990,score:74,isNew:false,isHot:false,votes:22},
+  {id:102,name:'Comedero Automático Wi-Fi',  cat:'mascotas',   icon:'🍽️',store:'Linio',       price:69990,before:109990,score:80,isNew:false,isHot:false,votes:35},
+  {id:103,name:'Arnés Kong Reflectivo',      cat:'mascotas',   icon:'🦮',store:'Petco',        price:29990,before:49990,score:72,isNew:false,isHot:false,votes:18},
+  {id:104,name:'Acuario Kit Completo 60L',   cat:'mascotas',   icon:'🐠',store:'Falabella',    price:79990,before:129990,score:75,isNew:false,isHot:false,votes:23},
+  {id:105,name:'Alimento Royal Canin 15kg',  cat:'mascotas',   icon:'🥩',store:'Petco',        price:59990,before:89990,badge:'HOT',score:84,isNew:false,isHot:true,votes:61},
+  {id:106,name:'Transportadora Avión Perro', cat:'mascotas',   icon:'✈️',store:'Petco',       price:49990,before:79990,score:71,isNew:false,isHot:false,votes:14},
+  {id:107,name:'Juguete Interactivo Gato',   cat:'mascotas',   icon:'🧶',store:'Petco',        price:14990,before:24990,score:68,isNew:false,isHot:false,votes:9},
+  {id:108,name:'Camita Colgante Hamster',    cat:'mascotas',   icon:'🐹',store:'Linio',        price:9990,before:17990,score:64,isNew:false,isHot:false,votes:6},
+];
+
+const CAT_META={
+  all:{label:'Todas',icon:'🔥'},
+  tecnologia:{label:'Tecnología',icon:'💻'},
+  ropa:{label:'Ropa y Calzados',icon:'👗'},
+  hogar:{label:'Hogar',icon:'🏠'},
+  deportes:{label:'Deportes',icon:'⚽'},
+  entrete:{label:'Entretenimiento',icon:'🎮'},
+  instrumentos:{label:'Instrumentos',icon:'🎸'},
+  juguetes:{label:'Juguetes',icon:'🧸'},
+  mascotas:{label:'Mascotas',icon:'🐾'},
+};
+
+/* ══ STATE ══ */
+let fCat='all', fBrands=new Set(), fMaxPrice=1600000, fMinPrice=0, fMinDisc=0, fState='all', fSort='score', fQuery='', view='grid-4';
+const PAGE=20; let shown=PAGE;
+
+/* ══ THEME ══ */
+let isDark=false;
+document.getElementById('theme-btn').addEventListener('click',()=>{
+  isDark=!isDark;
+  document.documentElement.classList.toggle('dark',isDark);
+  document.getElementById('theme-btn').textContent=isDark?'☀️':'🌙';
+});
+
+/* ══ UTILS ══ */
+function fmt(n){return'$'+n.toLocaleString('es-CL')}
+function disc(p,b){return Math.round((1-p/b)*100)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function starsHtml(n){return'★'.repeat(n)+'☆'.repeat(5-n)}
+
+/* ══ FILTER ══ */
+function filtered(){
+  const q=fQuery.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return ALL_DEALS.filter(d=>{
+    if(fCat!=='all'&&d.cat!==fCat)return false;
+    if(fBrands.size>0&&!fBrands.has(d.store))return false;
+    if(d.price>fMaxPrice||d.price<fMinPrice)return false;
+    if(disc(d.price,d.before)<fMinDisc)return false;
+    if(fState==='new'&&!d.isNew)return false;
+    if(fState==='hot'&&!d.isHot)return false;
+    if(q&&!norm(d.name).includes(q)&&!norm(d.store).includes(q)&&!norm(d.cat).includes(q))return false;
+    return true;
+  }).sort((a,b)=>{
+    if(fSort==='saving')return disc(b.price,b.before)-disc(a.price,a.before);
+    if(fSort==='price-asc')return a.price-b.price;
+    if(fSort==='price-desc')return b.price-a.price;
+    if(fSort==='new')return (b.isNew?1:0)-(a.isNew?1:0);
+    if(fSort==='popular')return b.votes-a.votes;
+    if(fSort==='alpha')return a.name.localeCompare(b.name);
+    return b.score-a.score; // score default
+  });
+}
+
+/* ══ RENDER PRODUCT CARD ══ */
+function makeCard(d){
+  const pct=disc(d.price,d.before);
+  const rating=Math.min(5,Math.max(3,Math.round(d.score/20)));
+  const div=document.createElement('article');
+  div.className='pcard reveal'+(d.badge==='HOT'?' pcard--featured':'');
+  div.setAttribute('data-id',d.id);
+  div.setAttribute('aria-label',d.name);
+  div.innerHTML=`
+    <div class="pcard__img">
+      <div class="pcard__img-inner">${d.icon}</div>
+      <div class="pcard__badges">
+        ${d.isHot?'<span class="pbadge pbadge--hot">🔥 HOT</span>':''}
+        ${d.isNew?'<span class="pbadge pbadge--new">✨ NEW</span>':''}
+        <span class="pbadge pbadge--save">−${pct}%</span>
+      </div>
+      <button class="pcard__save-btn" data-id="${d.id}" aria-label="Guardar oferta" aria-pressed="false">🤍</button>
+    </div>
+    <div class="pcard__body">
+      <div class="pcard__cat">${CAT_META[d.cat]?.icon||''} ${CAT_META[d.cat]?.label||d.cat}</div>
+      <div class="pcard__name">${esc(d.name)}</div>
+      <div class="pcard__store">${esc(d.store)} <span class="pcard__store-badge">✓ Verificado</span></div>
+      <div class="pcard__prices">
+        <span class="pcard__before">${fmt(d.before)}</span>
+        <span class="pcard__now">${fmt(d.price)}</span>
+        <span class="pcard__saving">−${pct}%</span>
+      </div>
+      <div class="pcard__rating">
+        <span class="pcard__stars">${starsHtml(rating)}</span>
+        <span class="pcard__rating-num">${(d.score/10).toFixed(1)} · ${d.votes} votos</span>
+      </div>
+      <div class="pcard__score">
+        <div class="pcard__score-lbl"><span>ORVIN Score</span><span>${d.score}/100</span></div>
+        <div class="pcard__score-track"><div class="pcard__score-fill" data-fill="${d.score}"></div></div>
+      </div>
+    </div>
+    <div class="pcard__footer">
+      <a href="orvin_cupones.html" class="pcard__cta" rel="nofollow noopener noreferrer" target="_blank">Ver oferta →</a>
+      <button class="pcard__wish" data-id="${d.id}" aria-label="Lista de deseos">🔔</button>
+    </div>`;
+  return div;
+}
+
+/* ══ RENDER ══ */
+function renderGrid(reset=true){
+  if(reset)shown=PAGE;
+  const arr=filtered();
+  const grid=document.getElementById('product-grid');
+  grid.className=`product-grid ${view}`;
+  grid.innerHTML='';
+  document.getElementById('empty-state').style.display=arr.length?'none':'block';
+  document.getElementById('load-more-wrap').style.display=arr.length>shown?'block':'none';
+  document.getElementById('results-count').innerHTML=`<strong>${arr.length}</strong> producto${arr.length!==1?'s':''} encontrado${arr.length!==1?'s':''}`;
+  arr.slice(0,shown).forEach(d=>{
+    const card=makeCard(d);
+    grid.appendChild(card);
+  });
+  // Animate score bars
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    grid.querySelectorAll('.pcard__score-fill').forEach(f=>{
+      f.style.transition='width 1s cubic-bezier(.4,0,.2,1)';
+      f.style.width=f.dataset.fill+'%';
+    });
+    grid.querySelectorAll('.reveal').forEach(el=>rvIO.observe(el));
+    // Save buttons
+    grid.querySelectorAll('.pcard__save-btn').forEach(btn=>{
+      const saved=localStorage.getItem('orvin_save_'+btn.dataset.id)==='1';
+      if(saved){btn.textContent='❤️';btn.classList.add('saved');btn.setAttribute('aria-pressed','true');}
+      btn.addEventListener('click',()=>{
+        const s=btn.classList.toggle('saved');
+        btn.textContent=s?'❤️':'🤍';
+        btn.setAttribute('aria-pressed',String(s));
+        localStorage.setItem('orvin_save_'+btn.dataset.id,s?'1':'0');
+      });
+    });
+  }));
+  updateCounts();
+}
+
+/* ══ COUNTS ══ */
+function updateCounts(){
+  const map={all:ALL_DEALS.length};
+  Object.keys(CAT_META).forEach(k=>{if(k!=='all')map[k]=ALL_DEALS.filter(d=>d.cat===k).length;});
+  const ids={all:'cnt-all',tecnologia:'cnt-tec',ropa:'cnt-ropa',hogar:'cnt-hogar',deportes:'cnt-dep',entrete:'cnt-ent',instrumentos:'cnt-ins',juguetes:'cnt-jug',mascotas:'cnt-mas'};
+  Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.textContent=map[k]||0;});
+}
+
+/* ══ SIDEBAR FEATURED + RECS ══ */
+function buildSidebar(){
+  // Featured: top 3 by score
+  const top3=[...ALL_DEALS].sort((a,b)=>b.score-a.score).slice(0,3);
+  const sbF=document.getElementById('sb-featured');
+  sbF.innerHTML='';
+  top3.forEach(d=>{
+    const div=document.createElement('div');
+    div.className='mini-card';
+    div.innerHTML=`<span class="mini-card__icon">${d.icon}</span><div class="mini-card__info"><div class="mini-card__name">${esc(d.name)}</div><div class="mini-card__price">${fmt(d.price)}</div><div class="mini-card__saving">−${disc(d.price,d.before)}%</div></div>`;
+    div.addEventListener('click',()=>{fCat='all';renderGrid();document.querySelector(`[data-id="${d.id}"]`)?.scrollIntoView({behavior:'smooth',block:'center'});});
+    sbF.appendChild(div);
+  });
+  // Recs: top 3 by votes
+  const top3v=[...ALL_DEALS].sort((a,b)=>b.votes-a.votes).slice(0,3);
+  const sbR=document.getElementById('sb-recs');
+  sbR.innerHTML='';
+  top3v.forEach(d=>{
+    const div=document.createElement('div');
+    div.className='mini-card';
+    div.innerHTML=`<span class="mini-card__icon">${d.icon}</span><div class="mini-card__info"><div class="mini-card__name">${esc(d.name)}</div><div class="mini-card__price">${fmt(d.price)}</div><div class="mini-card__saving">🔥 ${d.votes} votos</div></div>`;
+    sbR.appendChild(div);
+  });
+}
+
+/* ══ BRAND FILTERS ══ */
+function buildBrandFilters(){
+  const brands=[...new Set(ALL_DEALS.map(d=>d.store))].sort();
+  const wrap=document.getElementById('brand-filters');
+  wrap.innerHTML='';
+  brands.forEach(b=>{
+    const div=document.createElement('div');
+    div.className='sb-filter-item';
+    const cnt=ALL_DEALS.filter(d=>d.store===b).length;
+    div.innerHTML=`<label><input type="checkbox" class="brand-cb" value="${esc(b)}"> ${esc(b)}</label><span class="count">${cnt}</span>`;
+    wrap.appendChild(div);
+  });
+  wrap.querySelectorAll('.brand-cb').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      if(cb.checked)fBrands.add(cb.value);
+      else fBrands.delete(cb.value);
+      renderGrid();
+    });
+  });
+}
+
+/* ══ CAT QUICK FILTERS ══ */
+function buildCatQuick(){
+  const qf=document.getElementById('cat-quick-filters');
+  qf.innerHTML='';
+  Object.entries(CAT_META).forEach(([k,v])=>{
+    const btn=document.createElement('button');
+    btn.className='filter-chip'+(fCat===k?' active':'');
+    btn.textContent=`${v.icon} ${v.label}`;
+    btn.addEventListener('click',()=>{
+      fCat=k;
+      document.querySelectorAll('.cat-quick-filters button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('[name="fcat"]').forEach(r=>{r.checked=r.value===k;});
+      document.getElementById('bc-current').textContent=k==='all'?'Todas las ofertas':v.label;
+      renderGrid();
+    });
+    qf.appendChild(btn);
+  });
+}
+
+/* ══ EVENTS ══ */
+document.querySelectorAll('[name="fcat"]').forEach(r=>r.addEventListener('change',()=>{fCat=r.value;buildCatQuick();renderGrid();}));
+document.querySelectorAll('[name="fstate"]').forEach(r=>r.addEventListener('change',()=>{fState=r.value;renderGrid();}));
+const maxPriceR=document.getElementById('max-price');
+maxPriceR.addEventListener('input',()=>{
+  fMaxPrice=parseInt(maxPriceR.value);
+  document.getElementById('max-price-lbl').textContent=`Hasta: ${fmt(fMaxPrice)}`;
+  renderGrid();
+});
+const minDiscR=document.getElementById('min-disc');
+minDiscR.addEventListener('input',()=>{
+  fMinDisc=parseInt(minDiscR.value);
+  document.getElementById('min-disc-lbl').textContent=`Mínimo: ${fMinDisc}%`;
+  renderGrid();
+});
+document.getElementById('min-p').addEventListener('change',function(){fMinPrice=parseInt(this.value)||0;renderGrid();});
+document.getElementById('max-p').addEventListener('change',function(){fMaxPrice=parseInt(this.value)||1600000;renderGrid();});
+document.getElementById('topbar-sort').addEventListener('change',function(){fSort=this.value;renderGrid();});
+document.querySelectorAll('.qs-btn').forEach(b=>b.addEventListener('click',()=>{
+  fSort=b.dataset.sort;
+  document.querySelectorAll('.qs-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('topbar-sort').value=fSort;
+  renderGrid();
+}));
+document.querySelectorAll('.view-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  view=btn.dataset.view;
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(false);
+}));
+document.getElementById('nav-q').addEventListener('input',function(){fQuery=this.value.trim();renderGrid();});
+document.getElementById('clear-filters').addEventListener('click',()=>{
+  fCat='all';fBrands.clear();fMaxPrice=1600000;fMinPrice=0;fMinDisc=0;fState='all';fSort='score';fQuery='';
+  document.getElementById('nav-q').value='';
+  document.querySelectorAll('[name="fcat"]').forEach(r=>r.checked=r.value==='all');
+  document.querySelectorAll('[name="fstate"]').forEach(r=>r.checked=r.value==='all');
+  document.querySelectorAll('.brand-cb').forEach(c=>c.checked=false);
+  maxPriceR.value=1600000;document.getElementById('max-price-lbl').textContent=`Hasta: ${fmt(1600000)}`;
+  minDiscR.value=0;document.getElementById('min-disc-lbl').textContent='Mínimo: 0%';
+  document.getElementById('topbar-sort').value='score';
+  buildCatQuick();renderGrid();
+});
+document.getElementById('load-more-btn').addEventListener('click',()=>{shown+=PAGE;renderGrid(false);});
+
+/* ══ MOBILE SIDEBAR ══ */
+const sidebar=document.getElementById('left-sidebar');
+const overlay=document.getElementById('mob-overlay');
+document.getElementById('mob-filter-btn').addEventListener('click',()=>{
+  sidebar.classList.add('mob-open');overlay.classList.add('open');document.body.style.overflow='hidden';
+});
+overlay.addEventListener('click',()=>{
+  sidebar.classList.remove('mob-open');overlay.classList.remove('open');document.body.style.overflow='';
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){sidebar.classList.remove('mob-open');overlay.classList.remove('open');document.body.style.overflow='';}});
+
+/* ══ REVEAL ══ */
+const rvIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');rvIO.unobserve(e.target);}}),{threshold:.06});
+
+/* ══ INIT ══ */
+buildBrandFilters();
+buildCatQuick();
+buildSidebar();
+updateCounts();
+renderGrid();
+
+// Check if URL has category param
+const urlParams=new URLSearchParams(window.location.search);
+const catParam=urlParams.get('cat');
+if(catParam&&CAT_META[catParam]){
+  fCat=catParam;
+  document.querySelectorAll('[name="fcat"]').forEach(r=>r.checked=r.value===catParam);
+  document.getElementById('bc-current').textContent=CAT_META[catParam].label;
+  buildCatQuick();
+  renderGrid();
+}
+</script>
+</body>
+</html>
